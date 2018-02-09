@@ -31,6 +31,9 @@ api.add_resource(Area('kitchen').get(), '/kitchen')
 api.add_resource(Area('entrance').get(), '/entrance')
 api.add_resource(Area('garden').get(), '/garden')
 
+# Controller
+# TODO implement the controller here
+
 
 if __name__ == '__main__':
     app.run(port='5005')
