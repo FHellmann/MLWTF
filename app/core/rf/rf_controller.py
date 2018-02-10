@@ -6,8 +6,8 @@
 import threading
 import time
 
-from rf_rpi import RFDevice
-from rf_signal import RfSignal
+from .rf_rpi import RFDevice
+from .rf_signal import RfSignal
 
 
 class RfController:
@@ -16,20 +16,22 @@ class RfController:
         self.rf_sender.enable_tx()
         self.rf_receiver = RFDevice(27)
         self.rf_receiver.enable_rx()
-        self.subscribers = []
-        threading.Thread(target=self.listening).start()
+        self.rf_signal_dict = {}
+        threading.Thread(target=self.__listening).start()
 
     def __del__(self):
         self.rf_sender.cleanup()
         self.rf_receiver.cleanup()
 
-    def send(self, rf_signal):
-        self.rf_sender.tx_code(rf_signal.get_code(), rf_signal.get_protocol(), rf_signal.get_pulselength())
+    def send(self, rf_signal_key):
+        if rf_signal_key in self.rf_signal_dict.keys():
+            rf_signal = self.rf_signal_dict[rf_signal_key]
+            self.rf_sender.tx_code(rf_signal.get_code(), rf_signal.get_protocol(), rf_signal.get_pulselength())
 
-    def subscribe(self, subscriber):
-        self.subscribers.append(subscriber)
+    def get_signals(self):
+        return self.rf_signal_dict.keys()
 
-    def listening(self):
+    def __listening(self):
         timestamp = None
         while True:
             if self.rf_receiver.rx_code_timestamp != timestamp:
@@ -39,8 +41,7 @@ class RfController:
                 rx_proto = self.rf_receiver.rx_proto
 
                 rf_signal = RfSignal(timestamp, rx_code, rx_pulselength, rx_proto)
-
-                for subscriber in self.subscribers:
-                    subscriber(rf_signal)
+                if str(rf_signal.get_code()) not in self.rf_signal_dict:
+                    self.rf_signal_dict[str(rf_signal.get_code())] = rf_signal
 
             time.sleep(0.01)
