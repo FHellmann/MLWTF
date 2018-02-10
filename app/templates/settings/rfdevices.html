@@ -13,8 +13,8 @@
                     </div>
                 </a>
                 <ul class="list-group list-group-flush">
-                    {% for rf_signal in {{ devices }}: %}
-                        <li class="list-group-item">{{ rf_signal }}  </li>
+                    {% for rf_signal in devices %}
+                        <li class="list-group-item">{{ rf_signal }}</li>
                     {% endfor %}
                 </ul>
             </div>

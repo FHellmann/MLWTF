@@ -19,4 +19,5 @@ def rf_devices():
     """
     Render the rf-device template on the /rfdevices route
     """
+    print(rf_controller.get_signals())
     return render_template('settings/rfdevices.html', title="Settings", devices=rf_controller.get_signals())
