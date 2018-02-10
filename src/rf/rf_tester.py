@@ -1,3 +1,5 @@
+import time
+
 from rf_controller import RfController
 from rf_signal import RfSignal
 
@@ -5,18 +7,19 @@ signalList = {}
 
 
 def callback(rf_signal):
-    title = input("Name the incoming signal: ")
-
-    if title in signalList:
-        signalList[title] = rf_signal
+    if str(rf_signal.get_code()) in signalList:
+        signalList[str(rf_signal.get_code())] = rf_signal
 
 
 if __name__ == '__main__':
     rf_controller = RfController()
     rf_controller.subscribe(callback)
     while True:
+        while len(signalList.keys()) == 0:
+            time.sleep(0.01)
+
         print("Options: " + str(signalList.keys()))
-        option = input("Select option by name: ")
+        option = input("Select option by number: ")
 
         if not option:
             continue
