@@ -23,7 +23,7 @@ def rf_devices():
 
 
 @settings.route('/rfdevices/add', methods=['POST'])
-def add():
+def rf_device_add():
     """
 
     """
@@ -32,7 +32,7 @@ def add():
 
 
 @settings.route('/rfdevices/test', methods=['POST'])
-def test():
+def rf_device_test():
     """
     Send the specific signal and return same site
     """
