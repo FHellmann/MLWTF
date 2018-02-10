@@ -41,7 +41,6 @@ class RfController:
                 rx_proto = self.rf_receiver.rx_proto
 
                 rf_signal = RfSignal(timestamp, rx_code, rx_pulselength, rx_proto)
-                if str(rf_signal.get_code()) not in self.rf_signal_dict:
-                    self.rf_signal_dict[str(rf_signal.get_code())] = rf_signal
+                self.rf_signal_dict[str(rf_signal.get_code())] = rf_signal
 
             time.sleep(0.01)
