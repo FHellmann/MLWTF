@@ -28,7 +28,7 @@ def rf_device_add():
 
     """
     # TODO Add signal code to device
-    return redirect(url_for('settings/rfdevices'))
+    return redirect(url_for('settings.rfdevices'))
 
 
 @settings.route('/rfdevices/test', methods=['POST'])
@@ -39,4 +39,4 @@ def rf_device_test():
     rf_signal = request.form['rf_signal']
     print("Test: " + str(rf_signal))
     rf_controller.send(rf_signal)
-    return redirect(url_for('settings/rfdevices'))
+    return redirect(url_for('settings.rfdevices'))
