@@ -37,6 +37,6 @@ def rf_device_test():
     Send the specific signal and return same site
     """
     rf_signal = request.form['rf_signal']
-
+    print("Test: " + str(rf_signal))
     rf_controller.send(rf_signal)
     return redirect(url_for('settings/rfdevices'))

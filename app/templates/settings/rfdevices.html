@@ -16,16 +16,18 @@
                     {% for rf_signal in devices %}
                         <li class="list-group-item">
                             <div class="d-flex">
-                                <div class="p-2">{{ rf_signal }}</div>
+                                <div class="p-2">
+                                    <label title="rf_signal">{{ rf_signal }}</label>
+                                </div>
                                 <div class="ml-auto p-2">
                                     <form role="form" method='POST' action="{{ url_for('settings.rf_device_add') }}">
-                                        <label class="invisble" title="rf_signal">{{ rf_signal }}</label>
+                                        <input name="rf_signal" type="hidden" value="{{ rf_signal }}">
                                         <button class="btn btn-primary" type="submit" value="submit"><i class="material-icons md-24 md-dark">add_circle</i></button>
                                     </form>
                                 </div>
                                 <div class="p-2">
                                     <form role="form" method='POST' action="{{ url_for('settings.rf_device_test') }}">
-                                        <label class="invisble" title="rf_signal">{{ rf_signal }}</label>
+                                        <input name="rf_signal" type="hidden" value="{{ rf_signal }}">
                                         <button class="btn btn-secondary" type="submit" value="submit"><i class="material-icons md-24 md-dark">send</i></button>
                                     </form>
                                 </div>
