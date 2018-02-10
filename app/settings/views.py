@@ -38,5 +38,4 @@ def rf_device_test():
     """
     rf_signal = request.form['rf_signal']
     rf_controller.send(rf_signal)
-    print("Test: " + str(rf_signal))
     return redirect(url_for('settings.rf_devices'))
