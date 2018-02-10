@@ -7,7 +7,7 @@ signalList = {}
 
 
 def callback(rf_signal):
-    if str(rf_signal.get_code()) in signalList:
+    if str(rf_signal.get_code()) not in signalList:
         signalList[str(rf_signal.get_code())] = rf_signal
 
 
