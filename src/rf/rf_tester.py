@@ -1,34 +1,27 @@
-import time
-import cmd
-
 from rf_controller import RfController
 from rf_signal import RfSignal
 
-signalList = []
+signalList = {}
 
 
 def callback(rf_signal):
-    exists = False
-    for x in range(0, len(signalList)):
-        if signalList[x].get_code() == rf_signal.get_code() & \
-                signalList[x].get_pulselength() == rf_signal.get_pulselength() & \
-                signalList[x].get_protocol() == rf_signal.get_protocol():
-            exists = True
+    title = input("Name the incoming signal: ")
 
-    if not exists:
-        signalList.append(rf_signal)
+    if title in signalList:
+        signalList[title] = rf_signal
 
 
 if __name__ == '__main__':
     rf_controller = RfController()
     rf_controller.subscribe(callback)
     while True:
-        number = int(input("Select " + str(signalList) + ": "))
+        print("Options: " + str(signalList.keys()))
+        option = input("Select option by name: ")
 
-        if number > len(signalList):
+        if not option:
             continue
 
-        signal = signalList[number]
+        signal = signalList[option]
         print("Send RF-Signal: " + str(signal))
 
         rf_controller.send(signal)

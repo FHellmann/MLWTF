@@ -3,7 +3,6 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-import logging
 import threading
 import time
 
