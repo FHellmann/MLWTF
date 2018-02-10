@@ -8,6 +8,7 @@ signalList = []
 
 
 def callback(rf_signal):
+    print("RF-Signal incoming: " + str(rf_signal))
     exists = False
     for x in range(0, len(signalList)):
         if signalList[x].get_code() == rf_signal.get_code() & \
@@ -17,6 +18,7 @@ def callback(rf_signal):
 
     if not exists:
         signalList.append(rf_signal)
+        print(str(rf_signal) + " added to possible options!")
 
 
 if __name__ == '__main__':
