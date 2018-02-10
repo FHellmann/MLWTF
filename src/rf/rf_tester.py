@@ -25,7 +25,7 @@ if __name__ == '__main__':
     rf_controller.subscribe(callback)
     while True:
         print("Waiting for RF-Signals...")
-        while len(signalList) == 0:
+        while len(signalList) > 1:
             time.sleep(0.01)
 
         print("RF-Signals detected: " + str(signalList))
