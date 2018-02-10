@@ -39,8 +39,9 @@ class RfController:
                 rx_pulselength = self.rf_receiver.rx_pulselength
                 rx_proto = self.rf_receiver.rx_proto
 
-                logging.info("Signal detected: " + str(rx_code) + " [pulselength " + str(rx_pulselength) + ", protocol " + str(rx_proto) + "]")
+                rf_signal = RfSignal(timestamp, rx_code, rx_pulselength, rx_proto)
+
                 for subscriber in self.subscribers:
-                    subscriber(RfSignal(timestamp, rx_code, rx_pulselength, rx_proto))
+                    subscriber(rf_signal)
 
             time.sleep(0.01)

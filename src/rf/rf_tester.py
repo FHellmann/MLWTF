@@ -8,7 +8,6 @@ signalList = []
 
 
 def callback(rf_signal):
-    print("RF-Signal incoming: " + str(rf_signal))
     exists = False
     for x in range(0, len(signalList)):
         if signalList[x].get_code() == rf_signal.get_code() & \
@@ -18,22 +17,15 @@ def callback(rf_signal):
 
     if not exists:
         signalList.append(rf_signal)
-        print(str(rf_signal) + " added to possible options!")
 
 
 if __name__ == '__main__':
-    print("Welcome to RF Tester")
     rf_controller = RfController()
     rf_controller.subscribe(callback)
     while True:
-        print("Waiting for RF-Signals...")
-        while len(signalList) == 0:
-            time.sleep(0.01)
+        number = int(input("Select " + str(signalList) + ": "))
 
-        print("RF-Signals detected: " + str(signalList))
-        number = int(input("Choose a RF-Signal to be send by entering the number: "))
-
-        if number < 0:
+        if number > len(signalList):
             continue
 
         signal = signalList[number]
