@@ -25,11 +25,14 @@ if __name__ == '__main__':
     rf_controller.subscribe(callback)
     while True:
         print("Waiting for RF-Signals...")
-        while len(signalList) < 2:
+        while len(signalList) == 0:
             time.sleep(0.01)
 
         print("RF-Signals detected: " + str(signalList))
         number = int(input("Choose a RF-Signal to be send by entering the number: "))
+
+        if number < 0:
+            continue
 
         signal = signalList[number]
         print("Send RF-Signal: " + str(signal))
