@@ -7,22 +7,22 @@ from rf_signal import RfSignal
 signalList = []
 
 
-def callback(signal):
+def callback(rf_signal):
     exists = False
     for x in range(0, len(signalList)):
-        if signalList[x].get_code() == signal.get_code() & \
-                signalList[x].get_pulselength() == signal.get_pulselength() & \
-                signalList[x].get_protocol() == signal.get_protocol():
+        if signalList[x].get_code() == rf_signal.get_code() & \
+                signalList[x].get_pulselength() == rf_signal.get_pulselength() & \
+                signalList[x].get_protocol() == rf_signal.get_protocol():
             exists = True
 
     if not exists:
-        signalList.append(signal)
+        signalList.append(rf_signal)
 
 
-def run():
+if __name__ == '__main__':
     print("Welcome to RF Tester")
     rf_controller = RfController()
-    rf_controller.listening(callback)
+    rf_controller.subscribe(callback)
     while True:
         print("Waiting for RF-Signals...")
         while len(signalList) == 0:
@@ -35,7 +35,3 @@ def run():
         print("Send RF-Signal: " + str(signal))
 
         rf_controller.send(signal)
-
-
-if __name__ == '__main__':
-    run()
