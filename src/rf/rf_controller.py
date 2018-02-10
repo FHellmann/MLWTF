@@ -25,7 +25,7 @@ class RfController:
         self.rf_receiver.cleanup()
 
     def send(self, rf_signal):
-        self.rf_sender.send(rf_signal.get_code(), rf_signal.get_protocol(), rf_signal.get_pulselength())
+        self.rf_sender.tx_send(rf_signal.get_code(), rf_signal.get_protocol(), rf_signal.get_pulselength())
 
     def subscribe(self, subscriber):
         self.subscribers.append(subscriber)
