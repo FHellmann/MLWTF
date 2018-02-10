@@ -6,7 +6,7 @@
 import threading
 import time
 
-from rpi_rf import RFDevice
+from rf_rpi import RFDevice
 from rf_signal import RfSignal
 
 
