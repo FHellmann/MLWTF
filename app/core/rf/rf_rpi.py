@@ -99,7 +99,7 @@ class RFDevice:
             self.tx_proto = 1
         if tx_pulselength:
             self.tx_pulselength = tx_pulselength
-        elif not self.tx_pulselength:
+        else:
             self.tx_pulselength = PROTOCOLS[self.tx_proto].pulselength
         rawcode = format(code, '#0{}b'.format(self.tx_length + 2))[2:]
         _LOGGER.debug("TX code: " + str(code))
@@ -151,9 +151,9 @@ class RFDevice:
             _LOGGER.error("TX is not enabled, not sending data")
             return False
         GPIO.output(self.gpio, GPIO.HIGH)
-        self._sleep((highpulses * self.tx_pulselength) / 1000000)
+        time.sleep((highpulses * self.tx_pulselength) / 1000000)
         GPIO.output(self.gpio, GPIO.LOW)
-        self._sleep((lowpulses * self.tx_pulselength) / 1000000)
+        time.sleep((lowpulses * self.tx_pulselength) / 1000000)
         return True
 
     def enable_rx(self):
@@ -228,11 +228,3 @@ class RFDevice:
             return True
 
         return False
-
-    @staticmethod
-    def _sleep(delay):
-        _delay = delay / 100
-        end = time.time() + delay - _delay
-
-        while time.time() < end:
-            time.sleep(_delay)
