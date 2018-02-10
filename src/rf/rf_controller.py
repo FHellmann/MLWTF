@@ -16,7 +16,7 @@ class RfController:
         self.rf_sender = RFDevice(17)
         self.rf_sender.enable_tx()
         self.rf_receiver = RFDevice(27)
-        self.rf_receiver.enable_tx()
+        self.rf_receiver.enable_rx()
         self.subscribers = []
         threading.Thread(target=self.listening).start()
 
