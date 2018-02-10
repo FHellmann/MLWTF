@@ -13,16 +13,19 @@ from rf_signal import RfSignal
 
 class RfController:
     def __init__(self):
-        self.rfdevice = RFDevice(17)
-        self.rfdevice.enable_tx()
+        self.rf_sender = RFDevice(17)
+        self.rf_sender.enable_tx()
+        self.rf_receiver = RFDevice(27)
+        self.rf_receiver.enable_tx()
         self.subscribers = []
         threading.Thread(target=self.listening).start()
 
     def __del__(self):
-        self.rfdevice.cleanup()
+        self.rf_sender.cleanup()
+        self.rf_receiver.cleanup()
 
     def send(self, rf_signal):
-        self.rfdevice.send(rf_signal.get_code(), rf_signal.get_protocol(), rf_signal.get_pulselength())
+        self.rf_sender.send(rf_signal.get_code(), rf_signal.get_protocol(), rf_signal.get_pulselength())
 
     def subscribe(self, subscriber):
         self.subscribers.append(subscriber)
@@ -30,11 +33,11 @@ class RfController:
     def listening(self):
         timestamp = None
         while True:
-            if self.rfdevice.rx_code_timestamp != timestamp:
-                timestamp = self.rfdevice.rx_code_timestamp
-                rx_code = self.rfdevice.rx_code
-                rx_pulselength = self.rfdevice.rx_pulselength
-                rx_proto = self.rfdevice.rx_proto
+            if self.rf_receiver.rx_code_timestamp != timestamp:
+                timestamp = self.rf_receiver.rx_code_timestamp
+                rx_code = self.rf_receiver.rx_code
+                rx_pulselength = self.rf_receiver.rx_pulselength
+                rx_proto = self.rf_receiver.rx_proto
 
                 logging.info("Signal detected: " + str(rx_code) + " [pulselength " + str(rx_pulselength) + ", protocol " + str(rx_proto) + "]")
                 for subscriber in self.subscribers:
