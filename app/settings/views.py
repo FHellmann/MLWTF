@@ -14,24 +14,24 @@ def index():
     return render_template('settings/index.html', title="Settings")
 
 
-@settings.route('/rfdevices')
+@settings.route('/rf_devices')
 def rf_devices():
     """
-    Render the rf-device template on the /rfdevices route
+    Render the rf-device template on the /rf_devices route
     """
-    return render_template('settings/rfdevices.html', title="Settings", devices=rf_controller.get_signals())
+    return render_template('settings/rf_devices.html', title="Settings", devices=rf_controller.get_signals())
 
 
-@settings.route('/rfdevices/add', methods=['POST'])
+@settings.route('/rf_devices/add', methods=['POST'])
 def rf_device_add():
     """
 
     """
     # TODO Add signal code to device
-    return redirect(url_for('settings.rfdevices'))
+    return redirect(url_for('settings.rf_devices'))
 
 
-@settings.route('/rfdevices/test', methods=['POST'])
+@settings.route('/rf_devices/test', methods=['POST'])
 def rf_device_test():
     """
     Send the specific signal and return same site
@@ -39,4 +39,4 @@ def rf_device_test():
     rf_signal = request.form['rf_signal']
     print("Test: " + str(rf_signal))
     rf_controller.send(rf_signal)
-    return redirect(url_for('settings.rfdevices'))
+    return redirect(url_for('settings.rf_devices'))
