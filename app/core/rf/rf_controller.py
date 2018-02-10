@@ -24,7 +24,7 @@ class RfController:
         self.rf_receiver.cleanup()
 
     def send(self, rf_signal_key):
-        if rf_signal_key in self.rf_signal_dict.keys():
+        if rf_signal_key in self.rf_signal_dict:
             rf_signal = self.rf_signal_dict[rf_signal_key]
             self.rf_sender.tx_code(rf_signal.get_code(), rf_signal.get_protocol(), rf_signal.get_pulselength())
 
