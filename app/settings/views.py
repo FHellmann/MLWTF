@@ -22,15 +22,6 @@ def rf_devices():
     return render_template('settings/rf_devices.html', title="Settings", devices=rf_controller.get_signals())
 
 
-@settings.route('/rf_devices/add', methods=['POST'])
-def rf_device_add():
-    """
-
-    """
-    # TODO Add signal code to device
-    return redirect(url_for('settings.rf_devices'))
-
-
 @settings.route('/rf_devices/test', methods=['POST'])
 def rf_device_test():
     """
