@@ -12,9 +12,9 @@ from .rf_signal import RfSignal
 
 class RfController:
     def __init__(self):
-        self.rf_sender = RFDevice(17)
+        self.rf_sender = RFDevice(17, tx_proto=2)
         self.rf_sender.enable_tx()
-        self.rf_receiver = RFDevice(27)
+        self.rf_receiver = RFDevice(27, tx_proto=2)
         self.rf_receiver.enable_rx()
         self.rf_signal_dict = {}
         threading.Thread(target=self.__listening).start()
