@@ -19,10 +19,10 @@
                                 <div class="p-2">
                                     <label title="rf_signal">{{ rf_signal }}</label>
                                 </div>
-                                <div class="p-2">
+                                <div class="ml-auto p-2">
                                     <form role="form" method='POST' action="{{ url_for('settings.rf_device_test') }}">
                                         <input name="rf_signal" type="hidden" value="{{ rf_signal }}">
-                                        <button class="btn btn-secondary" type="submit" value="submit"><i class="material-icons md-24 md-dark">send</i></button>
+                                        <button class="btn btn-primary" type="submit" value="submit"><i class="material-icons md-24 md-dark">send</i></button>
                                     </form>
                                 </div>
                             </div>
