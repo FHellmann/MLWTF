@@ -4,13 +4,12 @@
 {% block body %}
 <div class="intro-header">
     <div class="container">
-        <div class="card" style="width: 18rem;">
+        <div class="card w-25">
+            <h5 class="card-header">Setup Assistant</h5>
             <div class="card-body">
-                <h5 class="card-title">Setup Assistant</h5>
                 <h6 class="card-subtitle mb-2 text-muted">Setup a new device</h6>
                 <p class="card-text">Do you want to add a new device to your Smart Home?</p>
-                <a href="#" class="card-link btn btn-secondary rounded">Read more</a>
-                <a href="#" class="card-link btn btn-primary rounded">YES</a>
+                <a href="{{ url_for('settings.setup_assistant') }}" class="btn btn-primary rounded">Yes</a>
             </div>
         </div>
     </div>

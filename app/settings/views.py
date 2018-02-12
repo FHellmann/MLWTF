@@ -30,3 +30,11 @@ def rf_device_test():
     rf_signal = request.form['rf_signal']
     rf_controller.send(rf_signal)
     return redirect(url_for('settings.rf_devices'))
+
+
+@settings.route('/setup_assistant')
+def setup_assistant():
+    """
+    Render the setup assistant on the /setup_assistant route
+    """
+    return render_template('settings/setup_assistant.html', title="Setup Assistant")
