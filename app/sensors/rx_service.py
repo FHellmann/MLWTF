@@ -6,6 +6,7 @@
 import threading
 import time
 import logging
+from datetime import datetime
 
 from ..hardware.rf_rpi import Device
 from ..hardware.gpio import RaspberryPi3 as GPIO_PI
@@ -16,24 +17,27 @@ _LOGGER = logging.getLogger(__name__)
 class RxService:
     def __init__(self):
         self.rx_device = Device(GPIO_PI.GPIO_27)
+        self.result = None
 
     def __del__(self):
         self.rx_device.cleanup()
 
-    def find_verified_signals(self, time_to_search_sec, callback):
-        threading.Thread(target=self._listening, args={time_to_search_sec, callback}).start()
+    def search_verified_signals(self, time_to_search_sec):
+        threading.Thread(target=self._listening, args=time_to_search_sec).start()
 
-    def _listening(self, time_to_search_sec, callback):
+    def get_result(self):
+        return self.result
+
+    def _listening(self, time_to_search_sec):
         self.rx_device.enable_rx()
-        search_verified_signals = True
-        search_verified_signals_timer = time.time()
         rf_signal_counter = {}
-        rf_verified_signal = None
         rf_signal_dict = {}
+        self.result = []
+        start_time = datetime.now()
 
         timestamp = None
-        while True:
-            if search_verified_signals and self.rx_device.rx_signal.time != timestamp:
+        while datetime.now() - start_time < time_to_search_sec:
+            if self.rx_device.rx_signal.time != timestamp:
                 rf_signal = self.rx_device.rx_signal
                 timestamp = rf_signal.time
 
@@ -42,8 +46,7 @@ class RxService:
 
                 # Signal found -> filter only the signals we would like to see
                 if rf_signal_counter[str(rf_signal.code)] >= 3:
-                    rf_verified_signal = rf_signal
-                    search_verified_signals = False
+                    self.result.append(rf_signal)
 
             time.sleep(0.01)
 
