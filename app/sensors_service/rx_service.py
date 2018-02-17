@@ -11,12 +11,10 @@ from ..hardware.rf_rpi import Device
 from ..hardware.gpio import RaspberryPi3 as GPIO_PI
 
 
-class RfController:
+class RxService:
     def __init__(self):
-        self.rf_sender = Device(GPIO_PI.GPIO_17)
-        self.rf_sender.enable_tx()
-        self.rf_receiver = Device(GPIO_PI.GPIO_27)
-        self.rf_receiver.enable_rx()
+        self.rx_device = Device(GPIO_PI.GPIO_27)
+        self.rx_device.enable_rx()
         self.search_verified_signals = False
         self.search_verified_signals_timer = None
         self.rf_signal_counter = {}
@@ -25,12 +23,7 @@ class RfController:
         threading.Thread(target=self.__listening).start()
 
     def __del__(self):
-        self.rf_sender.cleanup()
-        self.rf_receiver.cleanup()
-
-    def send(self, rf_signal_key):
-        rf_signal = self.rf_signal_dict[rf_signal_key]
-        return self.rf_sender.tx_code(rf_signal)
+        self.rx_device.cleanup()
 
     def get_signals(self):
         return self.rf_signal_dict.keys()
@@ -48,8 +41,8 @@ class RfController:
     def __listening(self):
         timestamp = None
         while True:
-            if self.search_verified_signals and self.rf_receiver.rx_signal.time != timestamp:
-                rf_signal = self.rf_receiver.rx_signal
+            if self.search_verified_signals and self.rx_device.rx_signal.time != timestamp:
+                rf_signal = self.rx_device.rx_signal
                 timestamp = rf_signal.time
 
                 self.rf_signal_dict[str(rf_signal.code)] = rf_signal

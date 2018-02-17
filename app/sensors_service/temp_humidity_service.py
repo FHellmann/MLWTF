@@ -1,3 +1,8 @@
+#!/usr/bin/python
+"""
+    Author: Fabio Hellmann <info@fabio-hellmann.de>
+"""
+
 from enum import Enum
 
 
