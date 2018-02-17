@@ -33,7 +33,7 @@ def sensor_read(sensor_type, gpio_pin):
         elif result == DHT_TIMEOUT_ERROR:
             error_mess = "A timeout occurred while attempting to read the sensor!"
         elif result == DHT_CHECKSUM_ERROR:
-            error_mess = "The checksum verification of sensors_service' data failed!"
+            error_mess = "The checksum verification of sensors' data failed!"
         elif result == DHT_INIT_ERROR:
             error_mess = "An error occurred while initializing the GPIO ports"
         else:

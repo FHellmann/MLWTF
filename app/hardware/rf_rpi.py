@@ -4,7 +4,6 @@ Sending and receiving 433/315Mhz signals with low-cost GPIO RF Modules on a Rasp
 
 import logging
 import time
-from collections import namedtuple
 from enum import Enum
 from RPi import GPIO
 
@@ -142,7 +141,6 @@ class Device:
                         return False
             if not self.tx_sync():
                 return False
-
         return True
 
     def tx_l0(self):

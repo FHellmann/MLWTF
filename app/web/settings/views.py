@@ -1,7 +1,12 @@
+#!/usr/bin/python
+"""
+    Author: Fabio Hellmann <info@fabio-hellmann.de>
+"""
+
 from flask import render_template, request, redirect, url_for
 
 from . import settings
-from ...sensors_service.rx_service import RfController
+from ...sensors.rx_service import RfController
 
 rf_controller = RfController()
 

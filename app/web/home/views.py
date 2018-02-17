@@ -1,3 +1,8 @@
+#!/usr/bin/python
+"""
+    Author: Fabio Hellmann <info@fabio-hellmann.de>
+"""
+
 from flask import render_template
 
 from . import home

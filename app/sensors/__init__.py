@@ -5,6 +5,6 @@
 
 from flask import Blueprint
 
-home = Blueprint('home', __name__)
+sensors = Blueprint('sensors', __name__)
 
-from . import views
+from . import api
