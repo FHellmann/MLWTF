@@ -4,18 +4,19 @@
 {% block body %}
 <div class="intro-header">
     <div class="container">
-        <h1 class="display-4">
-            <span class="material-icons md-18 md-dark">arrow_back</span> Setup Assistant
-        </h1>
-        <h5 class="text-muted">Setup your new device in only 3 steps.</h5>
+        <a href="{{ url_for('home.index') }}" style="text-decoration: none;">
+            <div class="card-header text-muted font-weight-bold align-middle">
+                <span class="material-icons md-18 md-dark">arrow_back</span> Setup Assistant
+            </div>
+        </a>
 
         <div id="accordion">
             <div class="card">
-                <div class="card-header" id="headingOne">
-                    <button class="btn btn-light mb-0" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      #1 Step <i class="material-icons mb-light badge badge-success">done</i>
-                    </button>
-                </div>
+                <a href="#" class="btn btn-light mb-0" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <div class="card-header" id="headingOne">
+                      #1 Step: Detect your device <i class="material-icons mb-light badge badge-success">done</i>
+                    </div>
+                </a>
 
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
@@ -26,7 +27,7 @@
             <div class="card">
                 <div class="card-header" id="headingTwo">
                     <button class="btn btn-light mb-0" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                      #2 Step <i class="material-icons mb-light badge badge-success">done</i>
+                      #2 Step: Name your device <i class="material-icons mb-light badge badge-success">done</i>
                     </button>
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -35,7 +36,6 @@
                         <form>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="deviceName" aria-describedby="deviceNameHelp" placeholder="Device name">
-                                <small id="deviceNameHelp" class="form-text text-muted">You can choose a device name by yourself. It is common to name it by their type and function.</small>
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-primary">OK</button>
                                 </div>
@@ -47,7 +47,7 @@
             <div class="card">
                 <div class="card-header" id="headingThree">
                     <button class="btn btn-light mb-0" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                      #3 Step <i class="material-icons mb-light badge badge-success">done</i>
+                      #3 Step: Test your device <i class="material-icons mb-light badge badge-success">done</i>
                     </button>
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">

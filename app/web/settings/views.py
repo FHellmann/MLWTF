@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for
 
 from . import settings
-from ..core.rf.rf_controller import RfController
+from ...sensors.rx_service import RfController
 
 rf_controller = RfController()
 
