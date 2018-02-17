@@ -4,11 +4,11 @@
 """
 
 from . import sensors
-from flask import request, abort
-
+from flask import request, abort, jsonify
+from .rx_service import RxService
 
 # Define services
-
+rx_service = RxService()
 
 # Define Rest Calls
 
@@ -18,16 +18,11 @@ def index():
     pass
 
 
-@sensors.route('/rx/start', methods=['PUT'])
+@sensors.route('/rx/search', methods=['PUT'])
 def rx_find():
-    pass
-
-
-@sensors.route('/rx/stop', methods=['PUT'])
-def rx_find():
-    pass
+    rx_service.search_verified_signals(30)
 
 
 @sensors.route('/rx/found_devices', methods=['GET'])
 def rx_find():
-    pass
+    return jsonify(rx_service.get_result())
