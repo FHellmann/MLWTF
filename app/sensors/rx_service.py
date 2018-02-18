@@ -36,8 +36,7 @@ class RxService:
 
         self.searching = True
         self.rx_device.enable_rx()
-        rf_signal_counter = {}
-        rf_signal_dict = {}
+        rf_signal_codes = {}
         self.result = []
         start_time = datetime.now()
 
@@ -47,13 +46,12 @@ class RxService:
             if not (rf_signal is None) and rf_signal.time != timestamp:
                 timestamp = rf_signal.time
 
-                rf_signal_dict[str(rf_signal.code)] = rf_signal
-                rf_signal_counter[str(rf_signal.code)] += 1
-                _LOGGER.debug("Found signal: " + str(rf_signal))
-                _LOGGER.debug("Signal Counter: " + str(rf_signal_counter))
+                if rf_signal.code not in rf_signal_codes:
+                    rf_signal_codes[rf_signal.code] = 1
+                rf_signal_codes[rf_signal.code] += 1
 
                 # Signal found -> filter only the signals we would like to see
-                if rf_signal_counter[str(rf_signal.code)] >= 3:
+                if rf_signal_codes[rf_signal.code] >= 3:
                     _LOGGER.debug("Found verified signal: " + str(rf_signal))
                     self.result.append(rf_signal)
 
@@ -62,4 +60,4 @@ class RxService:
         self.rx_device.disable_rx()
         self.searching = False
 
-        _LOGGER.debug("Finish search for verified signals")
+        _LOGGER.debug("Finish search for verified signals (Found=" + str(len(self.result)) + ")")
