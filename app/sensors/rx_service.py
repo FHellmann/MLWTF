@@ -38,7 +38,7 @@ class RxService:
 
         timestamp = None
         while (datetime.now() - start_time).seconds < time_to_search_sec:
-            if self.rx_device and self.rx_device.rx_signal.time != timestamp:
+            if self.rx_device is not None and self.rx_device.rx_signal.time != timestamp:
                 rf_signal = self.rx_device.rx_signal
                 timestamp = rf_signal.time
 
