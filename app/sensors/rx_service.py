@@ -43,8 +43,8 @@ class RxService:
 
         timestamp = None
         while (datetime.now() - start_time).seconds < time_to_search_sec:
-            if not (self.rx_device.rx_signal is None) and self.rx_device.rx_signal.time != timestamp:
-                rf_signal = self.rx_device.rx_signal
+            rf_signal = self.rx_device.rx_signal
+            if not (rf_signal is None) and rf_signal.time != timestamp:
                 timestamp = rf_signal.time
 
                 rf_signal_dict[str(rf_signal.code)] = rf_signal
