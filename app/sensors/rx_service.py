@@ -16,7 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class RxService:
     def __init__(self):
-        self.rx_device = Device(GPIO_PI.GPIO_27)
+        self.rx_device = Device(GPIO_PI.GPIO_27.value)
         self.result = None
 
     def __del__(self):
