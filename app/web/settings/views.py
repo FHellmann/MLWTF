@@ -3,7 +3,7 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template
 
 from . import settings
 

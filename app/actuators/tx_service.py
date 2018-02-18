@@ -3,8 +3,8 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from ..hardware.rf_rpi import Device
 from ..hardware.gpio import RaspberryPi3 as GPIO_PI
+from ..hardware.rf_rpi import Device
 
 
 class TxService:

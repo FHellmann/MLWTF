@@ -3,13 +3,13 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
+import logging
 import threading
 import time
-import logging
 from datetime import datetime
 
-from ..hardware.rf_rpi import Device
 from ..hardware.gpio import RaspberryPi3 as GPIO_PI
+from ..hardware.rf_rpi import Device
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class RxService:
 
         timestamp = None
         while (datetime.now() - start_time).seconds < time_to_search_sec:
-            if not(self.rx_device.rx_signal is None) and self.rx_device.rx_signal.time != timestamp:
+            if not (self.rx_device.rx_signal is None) and self.rx_device.rx_signal.time != timestamp:
                 rf_signal = self.rx_device.rx_signal
                 timestamp = rf_signal.time
 

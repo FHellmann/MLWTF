@@ -1,10 +1,15 @@
 """
-Sending and receiving 433/315Mhz signals with low-cost GPIO RF Modules on a Raspberry Pi.
+    Author: Fabio Hellmann <info@fabio-hellmann.de>
+
+    Sending and receiving 433/315Mhz signals with low-cost GPIO RF Modules on a Raspberry Pi.
+
+    Original: https://github.com/milaq/rpi-rf
 """
 
 import logging
 import time
 from enum import Enum
+
 from RPi import GPIO
 
 MAX_CHANGES = 67
@@ -48,7 +53,7 @@ class Signal:
 
     def __str__(self):
         return __name__ + "(time=" + str(self.time) + ", code=" + str(self.code) + \
-               ", pulselength=" + str(self.pulselength) + ", bitlength=" + str(self.bit_length) +\
+               ", pulselength=" + str(self.pulselength) + ", bitlength=" + str(self.bit_length) + \
                ", protocol=" + str(self.protocol) + ")"
 
 
@@ -223,10 +228,10 @@ class Device:
 
         for i in range(1, change_count, 2):
             if (self._rx_timings[i] - delay * protocol.zero_high < delay_tolerance and
-                    self._rx_timings[i+1] - delay * protocol.zero_low < delay_tolerance):
+                    self._rx_timings[i + 1] - delay * protocol.zero_low < delay_tolerance):
                 code <<= 1
             elif (self._rx_timings[i] - delay * protocol.one_high < delay_tolerance and
-                  self._rx_timings[i+1] - delay * protocol.one_low < delay_tolerance):
+                  self._rx_timings[i + 1] - delay * protocol.one_low < delay_tolerance):
                 code <<= 1
                 code |= 1
             else:
