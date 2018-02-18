@@ -51,7 +51,7 @@ class RxService:
                 rf_signal_codes[rf_signal.code] += 1
 
                 # Signal found -> filter only the signals we would like to see
-                if rf_signal_codes[rf_signal.code] >= 3:
+                if rf_signal_codes[rf_signal.code] == 3:
                     _LOGGER.debug("Found verified signal: " + str(rf_signal))
                     self.result.append(rf_signal)
 
