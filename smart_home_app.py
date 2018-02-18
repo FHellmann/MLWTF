@@ -3,7 +3,7 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from . import create_app
+from app import create_app
 
 app = create_app()
 
