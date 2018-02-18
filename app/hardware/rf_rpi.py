@@ -65,7 +65,7 @@ class Device:
         if tx_pulselength:
             self.tx_pulselength = tx_pulselength
         else:
-            self.tx_pulselength = tx_proto.px_pulselength
+            self.tx_pulselength = tx_proto.pulselength
         self.tx_repeat = tx_repeat
         self.tx_length = tx_length
         self.rx_enabled = False
