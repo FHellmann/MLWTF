@@ -207,7 +207,7 @@ class Device:
                 self._rx_change_count -= 1
                 if self._rx_repeat_count == 2:
                     for name, protocol in ProtocolType.__members__.items():
-                        if self._rx_waveform(protocol, self._rx_change_count, timestamp):
+                        if not(protocol is ProtocolType.NONE) and self._rx_waveform(protocol, self._rx_change_count, timestamp):
                             _LOGGER.debug("RX code " + str(self.rx_signal.code))
                             break
                     self._rx_repeat_count = 0
