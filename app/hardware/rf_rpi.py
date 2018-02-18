@@ -65,7 +65,7 @@ class Device:
         if tx_pulselength:
             self.tx_pulselength = tx_pulselength
         else:
-            self.tx_pulselength = tx_proto.pulselength
+            self.tx_pulselength = tx_proto.value.pulselength
         self.tx_repeat = tx_repeat
         self.tx_length = tx_length
         self.rx_enabled = False
@@ -123,7 +123,7 @@ class Device:
         if signal.pulselength:
             self.tx_pulselength = signal.pulselength
         else:
-            self.tx_pulselength = self.tx_proto.pulselength
+            self.tx_pulselength = self.tx_proto.value.pulselength
         rawcode = format(signal.code, '#0{}b'.format(self.tx_length + 2))[2:]
         _LOGGER.debug("TX code: " + str(signal.code))
         return self.tx_bin(rawcode)
@@ -145,18 +145,18 @@ class Device:
 
     def tx_l0(self):
         """Send a '0' bit."""
-        return self.tx_waveform(self.tx_proto.zero_high,
-                                self.tx_proto.zero_low)
+        return self.tx_waveform(self.tx_proto.value.zero_high,
+                                self.tx_proto.value.zero_low)
 
     def tx_l1(self):
         """Send a '1' bit."""
-        return self.tx_waveform(self.tx_proto.one_high,
-                                self.tx_proto.one_low)
+        return self.tx_waveform(self.tx_proto.value.one_high,
+                                self.tx_proto.value.one_low)
 
     def tx_sync(self):
         """Send a sync."""
-        return self.tx_waveform(self.tx_proto.sync_high,
-                                self.tx_proto.sync_low)
+        return self.tx_waveform(self.tx_proto.value.sync_high,
+                                self.tx_proto.value.sync_low)
 
     def tx_waveform(self, highpulses, lowpulses):
         """Send basic waveform."""
