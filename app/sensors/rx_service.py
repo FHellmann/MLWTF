@@ -37,7 +37,7 @@ class RxService:
         start_time = datetime.now()
 
         timestamp = None
-        while datetime.now() - start_time < time_to_search_sec:
+        while (datetime.now() - start_time).seconds < time_to_search_sec:
             if self.rx_device.rx_signal.time != timestamp:
                 rf_signal = self.rx_device.rx_signal
                 timestamp = rf_signal.time
