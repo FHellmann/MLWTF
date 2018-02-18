@@ -23,7 +23,8 @@ class RxService:
         self.rx_device.cleanup()
 
     def search_verified_signals(self, time_to_search_sec):
-        threading.Thread(target=self._listening, args=time_to_search_sec).start()
+        _LOGGER.debug("Start search for verified signals")
+        threading.Thread(target=self._listening, args=(time_to_search_sec,)).start()
 
     def get_result(self):
         return self.result
@@ -46,8 +47,10 @@ class RxService:
 
                 # Signal found -> filter only the signals we would like to see
                 if rf_signal_counter[str(rf_signal.code)] >= 3:
+                    _LOGGER.debug("Found verified signal: " + str(rf_signal))
                     self.result.append(rf_signal)
 
             time.sleep(0.01)
 
         self.rx_device.disable_rx()
+        _LOGGER.debug("Finish search for verified signals")
