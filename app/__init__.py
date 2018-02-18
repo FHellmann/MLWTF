@@ -20,11 +20,11 @@ def create_app():
     app.register_blueprint(settings_blueprint, url_prefix='/settings')
 
     # Rest API for Sensors
-    from . import sensors as sensors_blueprint
-    app.register_blueprint(sensors_blueprint, url_prefix='/api/sensors')
+    from .actuators import actuators as actuators_blueprint
+    app.register_blueprint(actuators_blueprint, url_prefix='/api/actuators')
 
     # Rest API for Actuators
-    from . import actuators as actuators_blueprint
-    app.register_blueprint(actuators_blueprint, url_prefix='/api/actuators')
+    from .sensors import sensors as sensors_blueprint
+    app.register_blueprint(sensors_blueprint, url_prefix='/api/sensors')
 
     return app
