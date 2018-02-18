@@ -223,15 +223,15 @@ class Device:
     def _rx_waveform(self, protocol, change_count, timestamp):
         """Detect waveform and format code."""
         code = 0
-        delay = int(self._rx_timings[0] / protocol.sync_low)
+        delay = int(self._rx_timings[0] / protocol.value.sync_low)
         delay_tolerance = delay * self.rx_tolerance / 100
 
         for i in range(1, change_count, 2):
-            if (self._rx_timings[i] - delay * protocol.zero_high < delay_tolerance and
-                    self._rx_timings[i + 1] - delay * protocol.zero_low < delay_tolerance):
+            if (self._rx_timings[i] - delay * protocol.value.zero_high < delay_tolerance and
+                    self._rx_timings[i + 1] - delay * protocol.value.zero_low < delay_tolerance):
                 code <<= 1
-            elif (self._rx_timings[i] - delay * protocol.one_high < delay_tolerance and
-                  self._rx_timings[i + 1] - delay * protocol.one_low < delay_tolerance):
+            elif (self._rx_timings[i] - delay * protocol.value.one_high < delay_tolerance and
+                  self._rx_timings[i + 1] - delay * protocol.value.one_low < delay_tolerance):
                 code <<= 1
                 code |= 1
             else:
