@@ -3,6 +3,7 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
+"""
 from enum import Enum
 
 
@@ -42,3 +43,4 @@ def sensor_read(sensor_type, gpio_pin):
         raise DHTException(error_mess)
 
     return round(humidity, 2), round(temperature, 2)
+"""

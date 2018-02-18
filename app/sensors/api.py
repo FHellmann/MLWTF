@@ -24,5 +24,5 @@ def rx_find():
 
 
 @sensors.route('/rx/found_devices', methods=['GET'])
-def rx_find():
+def get_rx_found_devices():
     return jsonify(rx_service.get_result())
