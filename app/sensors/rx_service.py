@@ -31,8 +31,9 @@ class RxService:
 
     def search_verified_signals(self, time_to_search_sec):
         if self.searching:
-            return
+            return False
         threading.Thread(target=self._listening, args=(time_to_search_sec,)).start()
+        return True
 
     def get_result(self):
         return self.result

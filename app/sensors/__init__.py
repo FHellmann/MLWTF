@@ -5,29 +5,24 @@
 
 import json
 from cattr import structure, unstructure
-
 from flask import Blueprint
-
 from .rx_service import RxService
 
 sensors = Blueprint('sensors', __name__)
-
-response_200 = json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-
 rx_service = RxService()
 
 
 @sensors.route('/', methods=['GET'])
 def index():
-    return response_200
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
-@sensors.route('/rx/search', methods=['POST'])
+@sensors.route('/rx/signals/search', methods=['POST'])
 def rx_find():
-    rx_service.search_verified_signals(15)
-    return response_200
+    success = rx_service.search_verified_signals(15)
+    return json.dumps({'success': success}), 200, {'ContentType': 'application/json'}
 
 
-@sensors.route('/rx/found_devices', methods=['GET'])
+@sensors.route('/rx/signals', methods=['GET'])
 def get_rx_found_devices():
     return unstructure(rx_service.get_result())
