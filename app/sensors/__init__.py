@@ -4,8 +4,9 @@
 """
 
 import json
+from cattr import structure, unstructure
 
-from flask import Blueprint, jsonify
+from flask import Blueprint
 
 from .rx_service import RxService
 
@@ -21,12 +22,12 @@ def index():
     return response_200
 
 
-@sensors.route('/rx/search', methods=['PUT'])
+@sensors.route('/rx/search', methods=['POST'])
 def rx_find():
-    rx_service.search_verified_signals(30)
+    rx_service.search_verified_signals(15)
     return response_200
 
 
 @sensors.route('/rx/found_devices', methods=['GET'])
 def get_rx_found_devices():
-    return jsonify(rx_service.get_result())
+    return unstructure(rx_service.get_result())

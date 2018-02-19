@@ -8,7 +8,9 @@
 
 import logging
 import time
-from enum import Enum
+import attr
+from attr.validators import instance_of
+from enum import Enum, unique
 
 from RPi import GPIO
 
@@ -17,25 +19,19 @@ MAX_CHANGES = 67
 _LOGGER = logging.getLogger(__name__)
 
 
-class Protocol:
-    def __init__(self, pulselength, sync_high, sync_low, zero_high, zero_low, one_high, one_low):
-        self.pulselength = pulselength
-        self.sync_high = sync_high
-        self.sync_low = sync_low
-        self.zero_high = zero_high
-        self.zero_low = zero_low
-        self.one_high = one_high
-        self.one_low = one_low
-
-    def __str__(self):
-        return __name__ + "(pulselength=" + str(self.pulselength) + ", sync_high=" + str(self.sync_high) + \
-               ", sync_low=" + str(self.sync_low) + ", zero_high=" + str(self.zero_high) + \
-               ", zero_low=" + str(self.zero_low) + ", one_high=" + str(self.one_high) + \
-               ", one_low=" + str(self.one_low) + ")"
+@attr.s(frozen=True)
+class Protocol(object):
+    pulselength = attr.ib(validator=instance_of(int))
+    sync_high = attr.ib(validator=instance_of(int))
+    sync_low = attr.ib(validator=instance_of(int))
+    zero_high = attr.ib(validator=instance_of(int))
+    zero_low = attr.ib(validator=instance_of(int))
+    one_high = attr.ib(validator=instance_of(int))
+    one_low = attr.ib(validator=instance_of(int))
 
 
+@unique
 class ProtocolType(Enum):
-    NONE = None
     PL_350 = Protocol(350, 1, 31, 1, 3, 3, 1)
     PL_650 = Protocol(650, 1, 10, 1, 2, 2, 1)
     PL_100 = Protocol(100, 30, 71, 4, 11, 9, 6)
@@ -43,18 +39,13 @@ class ProtocolType(Enum):
     PL_500 = Protocol(500, 6, 14, 1, 2, 2, 1)
 
 
-class Signal:
-    def __init__(self, time, code, pulselength, bit_length, protocol):
-        self.time = time
-        self.code = code
-        self.pulselength = pulselength
-        self.bit_length = bit_length
-        self.protocol = protocol
-
-    def __str__(self):
-        return __name__ + "(time=" + str(self.time) + ", code=" + str(self.code) + \
-               ", pulselength=" + str(self.pulselength) + ", bitlength=" + str(self.bit_length) + \
-               ", protocol=" + str(self.protocol) + ")"
+@attr.s(frozen=True)
+class Signal(object):
+    time = attr.ib(validator=instance_of(int))
+    code = attr.ib(validator=instance_of(int))
+    pulselength = attr.ib(validator=instance_of(int))
+    bit_length = attr.ib(validator=instance_of(int))
+    protocol = attr.ib(validator=instance_of(ProtocolType))
 
 
 class Device:
@@ -207,7 +198,7 @@ class Device:
                 self._rx_change_count -= 1
                 if self._rx_repeat_count == 2:
                     for name, protocol in ProtocolType.__members__.items():
-                        if not(protocol is ProtocolType.NONE) and self._rx_waveform(protocol, self._rx_change_count, timestamp):
+                        if self._rx_waveform(protocol, self._rx_change_count, timestamp):
                             _LOGGER.debug("RX code " + str(self.rx_signal.code))
                             break
                     self._rx_repeat_count = 0

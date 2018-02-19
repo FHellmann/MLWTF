@@ -6,12 +6,18 @@
 import logging
 import threading
 import time
+import attr
 from datetime import datetime
 
 from ..hardware.gpio import RaspberryPi3 as GPIO_PI
 from ..hardware.rf_rpi import Device
 
 _LOGGER = logging.getLogger(__name__)
+
+
+@attr.s(frozen=True)
+class SignalList(object):
+    signals = attr.ib()
 
 
 class RxService:
@@ -61,3 +67,5 @@ class RxService:
         self.searching = False
 
         _LOGGER.debug("Finish search for verified signals (Found=" + str(len(self.result)) + ")")
+
+        self.result = SignalList(self.result)
