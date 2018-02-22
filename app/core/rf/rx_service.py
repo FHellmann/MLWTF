@@ -6,18 +6,13 @@
 import logging
 import threading
 import time
-import attr
 from datetime import datetime
 
-from ..hardware.gpio import RaspberryPi3 as GPIO_PI
-from ..hardware.rf_rpi import Device
+from . import SignalList
+from .rf_rpi import Device
+from ..gpio import RaspberryPi3 as GPIO_PI
 
 _LOGGER = logging.getLogger(__name__)
-
-
-@attr.s(frozen=True)
-class SignalList(object):
-    signals = attr.ib()
 
 
 class RxService:
