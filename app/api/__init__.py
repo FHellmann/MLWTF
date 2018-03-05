@@ -30,4 +30,4 @@ def default_error_handler(e):
 
 
 def register_blueprints(app):
-    app.register_blueprint(rest_api)
+    app.register_blueprint(api, url_prefix='/api')
