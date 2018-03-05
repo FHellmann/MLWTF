@@ -6,7 +6,6 @@
 import logging
 import threading
 import time
-from datetime import datetime, timedelta
 
 from . import SignalCollection
 from .rf_rpi import Device
@@ -19,7 +18,6 @@ class RxService:
     def __init__(self):
         self.rx_device = Device(GPIO_PI.GPIO_27.value)
         self.signal_list = []
-        self.searching = False
         threading.Thread(target=self._listening).start()
 
     def __del__(self):
