@@ -11,9 +11,9 @@ from ..core.rf.tx_service import TxService
 rx_service = RxService()
 tx_service = TxService()
 
-api_rf = Namespace('rf', description='The radio frequency interface')
+ns_rf = Namespace('rf', description='The radio frequency interface')
 
-protocol_model = api_rf.model('Protocol', {
+protocol_model = ns_rf.model('Protocol', {
     'pulselength': fields.Integer(readOnly=True, description='The pulse length of this protocol'),
     'sync_high': fields.Integer(readOnly=True, description='The sync high of this protocol'),
     'sync_low': fields.Integer(readOnly=True, description='The sync low of this protocol'),
@@ -23,7 +23,7 @@ protocol_model = api_rf.model('Protocol', {
     'one_low': fields.Integer(readOnly=True, description='The one low of this protocol')
 })
 
-signal_model = api_rf.model('Signal', {
+signal_model = ns_rf.model('Signal', {
     'time': fields.Integer(readOnly=True, description='The time when the signal was received'),
     'code': fields.Integer(readOnly=True, description='The code of the received signal'),
     'pulselength': fields.Integer(readOnly=True, description='The pulse length the signal was received over'),
@@ -33,19 +33,19 @@ signal_model = api_rf.model('Signal', {
 })
 
 
-@api_rf.response(404, 'No Signal found')
-@api_rf.route('/signals')
+@ns_rf.response(404, 'No Signal found')
+@ns_rf.route('/signals')
 class SignalResource(Resource):
 
-    @api_rf.route('/<int:since>')
-    @api_rf.marshal_list_with(signal_model)
+    @ns_rf.route('/<int:since>')
+    @ns_rf.marshal_list_with(signal_model)
     def get(self, since):
         return rx_service.get_results(since)
 
-    @api_rf.response(201, 'Signal send successful')
-    @api_rf.response(500, 'Failed to send signal')
-    @api_rf.expect(signal_model, validate=True)
-    @api_rf.marshal_with(signal_model)
+    @ns_rf.response(201, 'Signal send successful')
+    @ns_rf.response(500, 'Failed to send signal')
+    @ns_rf.expect(signal_model, validate=True)
+    @ns_rf.marshal_with(signal_model)
     def post(self, signal):
         if tx_service.send(signal):
             return None, 201

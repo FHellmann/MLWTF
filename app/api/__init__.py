@@ -6,7 +6,7 @@
 import logging
 from flask import Blueprint
 from flask_restplus import Api
-from .api_rf import api_rf
+from .api_rf import ns_rf
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ api = Api(
     contact_email='info@fabio-hellmann.de'
 )
 
-api.add_namespace(api_rf, path='/rf')
+api.add_namespace(ns_rf)
 
 
 @api.errorhandler
