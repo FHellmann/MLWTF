@@ -3,18 +3,17 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from flask_restplus import Resource, fields
+from flask_restplus import Namespace, Resource, fields
 
-from . import api
 from ..core.rf.rx_service import RxService
 from ..core.rf.tx_service import TxService
 
 rx_service = RxService()
 tx_service = TxService()
 
-api_rf = api.namespace('/rf', description='The radio frequency interface')
+api_rf = Namespace('rf', description='The radio frequency interface')
 
-protocol_model = api.model('Protocol', {
+protocol_model = api_rf.model('Protocol', {
     'pulselength': fields.Integer(readOnly=True, description='The pulse length of this protocol'),
     'sync_high': fields.Integer(readOnly=True, description='The sync high of this protocol'),
     'sync_low': fields.Integer(readOnly=True, description='The sync low of this protocol'),
@@ -24,7 +23,7 @@ protocol_model = api.model('Protocol', {
     'one_low': fields.Integer(readOnly=True, description='The one low of this protocol')
 })
 
-signal_model = api.model('Signal', {
+signal_model = api_rf.model('Signal', {
     'time': fields.Integer(readOnly=True, description='The time when the signal was received'),
     'code': fields.Integer(readOnly=True, description='The code of the received signal'),
     'pulselength': fields.Integer(readOnly=True, description='The pulse length the signal was received over'),
@@ -34,7 +33,7 @@ signal_model = api.model('Signal', {
 })
 
 
-@api.response(404, 'No Signal found')
+@api_rf.response(404, 'No Signal found')
 @api_rf.route('/signals')
 class SignalResource(Resource):
 

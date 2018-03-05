@@ -6,6 +6,7 @@
 import logging
 from flask import Blueprint
 from flask_restplus import Api
+from .api_rf import api_rf
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,6 +19,8 @@ api = Api(
     description='The rest api allows to access all the sensor data and control the actuators.',
     contact_email='info@fabio-hellmann.de'
 )
+
+api.add_namespace(api_rf, path='/rf')
 
 
 @api.errorhandler
