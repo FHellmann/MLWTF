@@ -42,5 +42,5 @@ class Signal(object):
 
 
 @attr.s(frozen=True)
-class SignalList(object):
+class SignalCollection(object):
     signals = attr.ib()
