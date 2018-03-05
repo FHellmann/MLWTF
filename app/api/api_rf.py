@@ -37,7 +37,7 @@ signal_model = ns_rf.model('Signal', {
 @ns_rf.route('/signals')
 class SignalResource(Resource):
 
-    @ns_rf.route('/<int:since>')
+    @ns_rf.param('since', 'The time since when the signals should be fetched')
     @ns_rf.marshal_list_with(signal_model)
     def get(self, since):
         return rx_service.get_results(since)
