@@ -12,6 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 rest_api = Blueprint('api', __name__)
 
 api = Api(
+    rest_api,
     version='0.1',
     title='My Smart Home - Rest API',
     description='The rest api allows to access all the sensor data and control the actuators.',
