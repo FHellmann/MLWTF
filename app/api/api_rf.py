@@ -5,6 +5,7 @@
 
 from flask import request
 from flask_restplus import Namespace, Resource, fields, reqparse
+from cattr import structure
 
 from ..core.rf.rx_service import RxService
 from ..core.rf.tx_service import TxService
@@ -51,7 +52,7 @@ class SignalResource(Resource):
     @ns_rf.response(500, 'Failed to send signal')
     @ns_rf.expect(fields=signal_model, validate=True)
     def post(self):
-        signal = request.json
+        signal = structure(request.json, signal_model)
         if tx_service.send(signal):
             return None, 201
         return None, 500
