@@ -10,7 +10,7 @@ from ..gpio import RaspberryPi3 as GPIO_PI
 class TxService:
     def __init__(self):
         self.tx_device = Device(GPIO_PI.GPIO_17.value)
-        self.tx_device.enable_rx()
+        self.tx_device.enable_tx()
 
     def __del__(self):
         self.tx_device.cleanup()
