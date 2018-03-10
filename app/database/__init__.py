@@ -17,7 +17,7 @@ def setup(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'  # In-Memory usage for testing
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'my-smart-home.db')
     db.init_app(app)
-    db.create_all(app)
+    db.create_all()
 
 
 def db_add(item):
