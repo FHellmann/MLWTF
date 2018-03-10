@@ -7,6 +7,7 @@ import logging
 import threading
 import time
 
+from datetime import datetime
 from . import SignalCollection
 from .rf_rpi import Device
 from ..gpio import RaspberryPi3 as GPIO_PI
@@ -27,8 +28,9 @@ class RxService:
         result = []
 
         for signal in self.signal_list:
-            _LOGGER.debug("Signal-Time=" + str(signal.time) + " <==> Since=" + str(since))
-            if signal.time >= since:
+            timestamp = (signal.time-datetime(1970,1,1)).total_seconds()
+            _LOGGER.debug("Signal-Time=" + str(timestamp) + " <==> Since=" + str(since))
+            if timestamp >= since:
                 result.append(signal)
 
         return SignalCollection(result)

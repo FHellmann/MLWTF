@@ -24,7 +24,7 @@ protocol_model = ns_rf.model('Protocol', {
 })
 
 signal_model = ns_rf.model('Signal', {
-    'time': fields.Integer(readOnly=True, description='The time when the signal was received'),
+    'time': fields.DateTime(readOnly=True, description='The time when the signal was received'),
     'code': fields.Integer(readOnly=True, description='The code of the received signal'),
     'pulselength': fields.Integer(readOnly=True, description='The pulse length the signal was received over'),
     'bit_length': fields.Integer(readOnly=True, description='The bit length of the received signal'),

@@ -8,6 +8,7 @@
 
 import logging
 import time
+from datetime import datetime
 
 from RPi import GPIO
 
@@ -159,7 +160,7 @@ class Device:
     # pylint: disable=unused-argument
     def rx_callback(self, gpio):
         """RX callback for GPIO event detection. Handle basic signal detection."""
-        timestamp = time.time() # int(time.perf_counter() * 1000000)
+        timestamp = int(time.perf_counter() * 1000000)
         duration = timestamp - self._rx_last_timestamp
 
         if duration > 5000:
@@ -168,7 +169,7 @@ class Device:
                 self._rx_change_count -= 1
                 if self._rx_repeat_count == 2:
                     for name, protocol in ProtocolType.__members__.items():
-                        if self._rx_waveform(protocol, self._rx_change_count, timestamp):
+                        if self._rx_waveform(protocol, self._rx_change_count):
                             _LOGGER.debug("RX code " + str(self.rx_signal.code))
                             break
                     self._rx_repeat_count = 0
@@ -181,7 +182,7 @@ class Device:
         self._rx_change_count += 1
         self._rx_last_timestamp = timestamp
 
-    def _rx_waveform(self, protocol, change_count, timestamp):
+    def _rx_waveform(self, protocol, change_count):
         """Detect waveform and format code."""
         code = 0
         delay = int(self._rx_timings[0] / protocol.value.sync_low)
@@ -199,7 +200,7 @@ class Device:
                 return False
 
         if self._rx_change_count > 6 and code != 0:
-            self.rx_signal = Signal(timestamp, code, delay, int(change_count / 2), protocol)
+            self.rx_signal = Signal(datetime.now(), code, delay, int(change_count / 2), protocol)
             return True
 
         return False
