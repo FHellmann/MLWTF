@@ -159,7 +159,7 @@ class Device:
     # pylint: disable=unused-argument
     def rx_callback(self, gpio):
         """RX callback for GPIO event detection. Handle basic signal detection."""
-        timestamp = int(time.perf_counter() * 1000000)
+        timestamp = time.time() # int(time.perf_counter() * 1000000)
         duration = timestamp - self._rx_last_timestamp
 
         if duration > 5000:
