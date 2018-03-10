@@ -33,19 +33,19 @@ signal_model = ns_rf.model('Signal', {
 })
 
 
+@ns_rf.route('/signals/<since>')
+@ns_rf.param('since', 'The time since when the signals should be fetched')
+@ns_rf.marshal_list_with(signal_model)
 @ns_rf.response(404, 'No Signal found')
-@ns_rf.route('/signals')
-class SignalResource(Resource):
+def get_signals(since):
+    return rx_service.get_results(since)
 
-    @ns_rf.param('since', 'The time since when the signals should be fetched')
-    @ns_rf.marshal_list_with(signal_model)
-    def get(self, since):
-        return rx_service.get_results(since)
 
-    @ns_rf.response(201, 'Signal send successful')
-    @ns_rf.response(500, 'Failed to send signal')
-    @ns_rf.expect(signal_model, validate=True)
-    def post(self, signal):
-        if tx_service.send(signal):
-            return None, 201
-        return None, 500
+@ns_rf.route('/signals/')
+@ns_rf.expect(signal_model, validate=True)
+@ns_rf.response(201, 'Signal send successful')
+@ns_rf.response(500, 'Failed to send signal')
+def post_signal(signal):
+    if tx_service.send(signal):
+        return None, 201
+    return None, 500
