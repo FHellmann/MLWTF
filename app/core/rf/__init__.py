@@ -7,7 +7,7 @@
 """
 
 from enum import Enum, unique
-
+from datetime import datetime
 import attr
 from attr.validators import instance_of
 
@@ -34,7 +34,7 @@ class ProtocolType(Enum):
 
 @attr.s(frozen=True)
 class Signal(object):
-    time = attr.ib(validator=instance_of(int))
+    time = attr.ib(validator=instance_of(datetime))
     code = attr.ib(validator=instance_of(int))
     pulselength = attr.ib(validator=instance_of(int))
     bit_length = attr.ib(validator=instance_of(int))
