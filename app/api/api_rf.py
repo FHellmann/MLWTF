@@ -5,7 +5,7 @@
 
 from flask import request
 from flask_restplus import Namespace, fields, Resource, reqparse
-from marshmallow import Schema, fields as ma_fields, post_load
+from marshmallow import Schema, fields as ma_fields, post_load, pprint
 
 from app.core.rf import Signal, Protocol
 from app.core.rf.rx_service import RxService
@@ -80,7 +80,8 @@ class SignalResource(Resource):
     @ns_rf.response(500, 'Failed to send signal')
     def post(self):
         schema = SignalSchema()
-        signal = schema.load(request.json).data
+        signal = schema.load(request.json)
+        pprint(signal)
         if tx_service.send(signal):
             return None, 201
         return None, 500
