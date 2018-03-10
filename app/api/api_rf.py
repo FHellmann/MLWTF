@@ -32,8 +32,11 @@ signal_model = ns_rf.model('Signal', {
                               description='The protocol of the received signal')
 })
 
-parser = reqparse.RequestParser()
-parser.add_argument('since', type=int)
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('since', type=int)
+
+post_parser = reqparse.RequestParser()
+post_parser.add_argument('signal', type=signal_model, required=True)
 
 
 @ns_rf.route('/signals')
@@ -42,15 +45,16 @@ class SignalResource(Resource):
     @ns_rf.param('since', 'The time since when the signals should be fetched')
     @ns_rf.marshal_list_with(signal_model)
     def get(self):
-        args = parser.parse_args()
+        args = get_parser.parse_args()
         since = args['since']
         return rx_service.get_results(since)
 
     @ns_rf.response(201, 'Signal send successful')
     @ns_rf.response(500, 'Failed to send signal')
-    @ns_rf.expect(signal_model, validate=True)
-    @ns_rf.marshal_with(signal_model)
-    def post(self, signal):
+    @ns_rf.expect(post_parser, validate=True)
+    def post(self):
+        args = post_parser.args()
+        signal = args['signal']
         if tx_service.send(signal):
             return None, 201
         return None, 500
