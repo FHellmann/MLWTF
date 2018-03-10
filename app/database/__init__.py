@@ -3,10 +3,20 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
+import os
 from datetime import datetime
-from app import db
+from flask_sqlalchemy import SQLAlchemy
 
+
+db = SQLAlchemy()
 session = db.session
+
+
+def setup(app):
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'  # In-Memory usage for testing
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'my-smart-home.db')
+    db.init_app(app)
 
 
 def db_add(item):
