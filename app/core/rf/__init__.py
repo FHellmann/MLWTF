@@ -6,15 +6,22 @@
     Original: https://github.com/milaq/rpi-rf
 """
 
-from enum import Enum, unique
 from datetime import datetime
+from enum import Enum, unique
+
 import attr
 from attr.validators import instance_of
+
+from .rx_service import RxService
+from .tx_service import TxService
+
+rx_service = RxService()
+tx_service = TxService()
 
 
 @attr.s(frozen=True)
 class Protocol(object):
-    pulselength = attr.ib(validator=instance_of(int))
+    pulse_length = attr.ib(validator=instance_of(int))
     sync_high = attr.ib(validator=instance_of(int))
     sync_low = attr.ib(validator=instance_of(int))
     zero_high = attr.ib(validator=instance_of(int))
@@ -36,6 +43,6 @@ class ProtocolType(Enum):
 class Signal(object):
     time = attr.ib(validator=instance_of(datetime))
     code = attr.ib(validator=instance_of(int))
-    pulselength = attr.ib(validator=instance_of(int))
+    pulse_length = attr.ib(validator=instance_of(int))
     bit_length = attr.ib(validator=instance_of(int))
     protocol = attr.ib(validator=instance_of(Protocol))
