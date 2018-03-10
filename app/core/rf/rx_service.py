@@ -8,7 +8,6 @@ import threading
 import time
 
 from datetime import datetime
-from . import SignalCollection
 from .rf_rpi import Device
 from ..gpio import RaspberryPi3 as GPIO_PI
 
