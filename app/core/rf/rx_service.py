@@ -33,7 +33,7 @@ class RxService:
             if timestamp >= since:
                 result.append(signal)
 
-        return SignalCollection(result)
+        return result
 
     def _listening(self):
         _LOGGER.debug("Listening for radio frequency signals")

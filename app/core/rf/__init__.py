@@ -39,8 +39,3 @@ class Signal(object):
     pulselength = attr.ib(validator=instance_of(int))
     bit_length = attr.ib(validator=instance_of(int))
     protocol = attr.ib(validator=instance_of(ProtocolType))
-
-
-@attr.s(frozen=True)
-class SignalCollection(object):
-    signals = attr.ib()
