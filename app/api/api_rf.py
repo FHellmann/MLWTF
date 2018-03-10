@@ -45,7 +45,6 @@ class SignalResource(Resource):
     @ns_rf.response(201, 'Signal send successful')
     @ns_rf.response(500, 'Failed to send signal')
     @ns_rf.expect(signal_model, validate=True)
-    @ns_rf.marshal_with(signal_model)
     def post(self, signal):
         if tx_service.send(signal):
             return None, 201
