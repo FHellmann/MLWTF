@@ -36,7 +36,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('since', type=int)
 
 
-@ns_rf.route('/signals/')
+@ns_rf.route('/signals/get')
 @ns_rf.param('since', 'The time since when the signals should be fetched')
 @ns_rf.marshal_list_with(signal_model)
 def get_signals():
@@ -45,7 +45,7 @@ def get_signals():
     return rx_service.get_results(since)
 
 
-@ns_rf.route('/signals/')
+@ns_rf.route('/signals/post')
 @ns_rf.expect(signal_model, validate=True)
 @ns_rf.response(201, 'Signal send successful')
 @ns_rf.response(500, 'Failed to send signal')
