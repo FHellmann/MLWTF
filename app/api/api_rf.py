@@ -3,7 +3,7 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from flask_restplus import Namespace, fields, reqparse
+from flask_restplus import Namespace, Resource, fields, reqparse
 
 from ..core.rf.rx_service import RxService
 from ..core.rf.tx_service import TxService
@@ -36,20 +36,21 @@ parser = reqparse.RequestParser()
 parser.add_argument('since', type=int)
 
 
-@ns_rf.route('/signals/get')
-@ns_rf.param('since', 'The time since when the signals should be fetched')
-@ns_rf.marshal_list_with(signal_model)
-def get_signals():
-    args = parser.parse_args()
-    since = args['since']
-    return rx_service.get_results(since)
+@ns_rf.route('/signals')
+class SignalResource(Resource):
 
+    @ns_rf.param('since', 'The time since when the signals should be fetched')
+    @ns_rf.marshal_list_with(signal_model)
+    def get(self):
+        args = parser.parse_args()
+        since = args['since']
+        return rx_service.get_results(since)
 
-@ns_rf.route('/signals/post')
-@ns_rf.expect(signal_model, validate=True)
-@ns_rf.response(201, 'Signal send successful')
-@ns_rf.response(500, 'Failed to send signal')
-def post_signal(signal):
-    if tx_service.send(signal):
-        return None, 201
-    return None, 500
+    @ns_rf.response(201, 'Signal send successful')
+    @ns_rf.response(500, 'Failed to send signal')
+    @ns_rf.expect(signal_model, validate=True)
+    @ns_rf.marshal_with(signal_model)
+    def post(self, signal):
+        if tx_service.send(signal):
+            return None, 201
+        return None, 500
