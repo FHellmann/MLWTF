@@ -9,25 +9,19 @@
 from datetime import datetime
 from enum import Enum, unique
 
-import attr
+from attr import s, ib
 from attr.validators import instance_of
 
-from .rx_service import RxService
-from .tx_service import TxService
 
-rx_service = RxService()
-tx_service = TxService()
-
-
-@attr.s(frozen=True)
+@s(frozen=True)
 class Protocol(object):
-    pulse_length = attr.ib(validator=instance_of(int))
-    sync_high = attr.ib(validator=instance_of(int))
-    sync_low = attr.ib(validator=instance_of(int))
-    zero_high = attr.ib(validator=instance_of(int))
-    zero_low = attr.ib(validator=instance_of(int))
-    one_high = attr.ib(validator=instance_of(int))
-    one_low = attr.ib(validator=instance_of(int))
+    pulse_length = ib(validator=instance_of(int))
+    sync_high = ib(validator=instance_of(int))
+    sync_low = ib(validator=instance_of(int))
+    zero_high = ib(validator=instance_of(int))
+    zero_low = ib(validator=instance_of(int))
+    one_high = ib(validator=instance_of(int))
+    one_low = ib(validator=instance_of(int))
 
 
 @unique
@@ -39,10 +33,10 @@ class ProtocolType(Enum):
     PL_500 = Protocol(500, 6, 14, 1, 2, 2, 1)
 
 
-@attr.s(frozen=True)
+@s(frozen=True)
 class Signal(object):
-    time = attr.ib(validator=instance_of(datetime))
-    code = attr.ib(validator=instance_of(int))
-    pulse_length = attr.ib(validator=instance_of(int))
-    bit_length = attr.ib(validator=instance_of(int))
-    protocol = attr.ib(validator=instance_of(Protocol))
+    time = ib(validator=instance_of(datetime))
+    code = ib(validator=instance_of(int))
+    pulse_length = ib(validator=instance_of(int))
+    bit_length = ib(validator=instance_of(int))
+    protocol = ib(validator=instance_of(Protocol))

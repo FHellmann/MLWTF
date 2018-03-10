@@ -7,7 +7,12 @@ from flask import request
 from flask_restplus import Namespace, Resource, reqparse
 from marshmallow import Schema, fields, post_load
 
-from ..core.rf import Signal, Protocol, tx_service, rx_service
+from ..core.rf import Signal, Protocol
+from ..core.rf.rx_service import RxService
+from ..core.rf.tx_service import TxService
+
+rx_service = RxService()
+tx_service = TxService()
 
 ns_rf = Namespace('rf', description='The radio frequency interface')
 

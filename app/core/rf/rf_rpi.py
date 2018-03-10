@@ -24,15 +24,15 @@ class Device:
 
     # pylint: disable=too-many-instance-attributes,too-many-arguments
     def __init__(self, gpio,
-                 tx_proto=ProtocolType.PL_350, tx_pulselength=None, tx_repeat=10, tx_length=24, rx_tolerance=80):
+                 tx_proto=ProtocolType.PL_350, tx_pulse_length=None, tx_repeat=10, tx_length=24, rx_tolerance=80):
         """Initialize the RF device."""
         self.gpio = gpio
         self.tx_enabled = False
         self.tx_proto = tx_proto
-        if tx_pulselength:
-            self.tx_pulselength = tx_pulselength
+        if tx_pulse_length:
+            self.tx_pulse_length = tx_pulse_length
         else:
-            self.tx_pulselength = tx_proto.value.pulselength
+            self.tx_pulse_length = tx_proto.value.pulse_length
         self.tx_repeat = tx_repeat
         self.tx_length = tx_length
         self.rx_enabled = False
@@ -88,9 +88,9 @@ class Device:
         else:
             self.tx_proto = ProtocolType.PL_350.value
         if signal.pulselength:
-            self.tx_pulselength = signal.pulselength
+            self.tx_pulse_length = signal.pulse_length
         else:
-            self.tx_pulselength = self.tx_proto.pulselength
+            self.tx_pulse_length = self.tx_proto.pulse_length
         rawcode = format(signal.code, '#0{}b'.format(self.tx_length + 2))[2:]
         _LOGGER.debug("TX code: " + str(signal.code))
         return self.tx_bin(rawcode)
@@ -131,9 +131,9 @@ class Device:
             _LOGGER.error("TX is not enabled, not sending data")
             return False
         GPIO.output(self.gpio, GPIO.HIGH)
-        time.sleep((highpulses * self.tx_pulselength) / 1000000)
+        time.sleep((highpulses * self.tx_pulse_length) / 1000000)
         GPIO.output(self.gpio, GPIO.LOW)
-        time.sleep((lowpulses * self.tx_pulselength) / 1000000)
+        time.sleep((lowpulses * self.tx_pulse_length) / 1000000)
         return True
 
     def enable_rx(self):
