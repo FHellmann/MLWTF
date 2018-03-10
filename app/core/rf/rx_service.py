@@ -49,8 +49,8 @@ class RxService:
                 self.signal_list.append(rf_signal)
 
                 # To prevent a memory leak -> remove all cached entries older then 15 minutes
-                cache_time_limit = int(round(time.time() - 15 * 60))
-                while self.signal_list[0].time < cache_time_limit:
+                cache_time_limit = 15 * 60
+                while (self.signal_list[0].time - datetime.now()).total_seconds() < cache_time_limit:
                     self.signal_list.pop(0)
 
             time.sleep(0.01)
