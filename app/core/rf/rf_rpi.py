@@ -87,7 +87,7 @@ class Device:
             self.tx_proto = signal.protocol
         else:
             self.tx_proto = ProtocolType.PL_350.value
-        if signal.pulselength:
+        if signal.pulse_length:
             self.tx_pulse_length = signal.pulse_length
         else:
             self.tx_pulse_length = self.tx_proto.pulse_length
