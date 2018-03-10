@@ -3,7 +3,7 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from flask_restplus import Namespace, Resource, fields
+from flask_restplus import Namespace, fields, reqparse
 
 from ..core.rf.rx_service import RxService
 from ..core.rf.tx_service import TxService
@@ -32,12 +32,16 @@ signal_model = ns_rf.model('Signal', {
                               description='The protocol of the received signal')
 })
 
+parser = reqparse.RequestParser()
+parser.add_argument('since', type=int)
 
-@ns_rf.route('/signals/<since>')
+
+@ns_rf.route('/signals/')
 @ns_rf.param('since', 'The time since when the signals should be fetched')
 @ns_rf.marshal_list_with(signal_model)
-@ns_rf.response(404, 'No Signal found')
-def get_signals(since):
+def get_signals():
+    args = parser.parse_args()
+    since = args['since']
     return rx_service.get_results(since)
 
 
