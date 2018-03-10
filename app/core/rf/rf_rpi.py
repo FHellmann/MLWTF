@@ -86,11 +86,11 @@ class Device:
         if signal.protocol:
             self.tx_proto = signal.protocol
         else:
-            self.tx_proto = ProtocolType.PL_350
+            self.tx_proto = ProtocolType.PL_350.value
         if signal.pulselength:
             self.tx_pulselength = signal.pulselength
         else:
-            self.tx_pulselength = self.tx_proto.value.pulselength
+            self.tx_pulselength = self.tx_proto.pulselength
         rawcode = format(signal.code, '#0{}b'.format(self.tx_length + 2))[2:]
         _LOGGER.debug("TX code: " + str(signal.code))
         return self.tx_bin(rawcode)
@@ -112,18 +112,18 @@ class Device:
 
     def tx_l0(self):
         """Send a '0' bit."""
-        return self.tx_waveform(self.tx_proto.value.zero_high,
-                                self.tx_proto.value.zero_low)
+        return self.tx_waveform(self.tx_proto.zero_high,
+                                self.tx_proto.zero_low)
 
     def tx_l1(self):
         """Send a '1' bit."""
-        return self.tx_waveform(self.tx_proto.value.one_high,
-                                self.tx_proto.value.one_low)
+        return self.tx_waveform(self.tx_proto.one_high,
+                                self.tx_proto.one_low)
 
     def tx_sync(self):
         """Send a sync."""
-        return self.tx_waveform(self.tx_proto.value.sync_high,
-                                self.tx_proto.value.sync_low)
+        return self.tx_waveform(self.tx_proto.sync_high,
+                                self.tx_proto.sync_low)
 
     def tx_waveform(self, highpulses, lowpulses):
         """Send basic waveform."""
@@ -169,7 +169,7 @@ class Device:
                 self._rx_change_count -= 1
                 if self._rx_repeat_count == 2:
                     for name, protocol in ProtocolType.__members__.items():
-                        if self._rx_waveform(protocol, self._rx_change_count):
+                        if self._rx_waveform(protocol.value, self._rx_change_count):
                             _LOGGER.debug("RX code " + str(self.rx_signal.code))
                             break
                     self._rx_repeat_count = 0
@@ -185,15 +185,15 @@ class Device:
     def _rx_waveform(self, protocol, change_count):
         """Detect waveform and format code."""
         code = 0
-        delay = int(self._rx_timings[0] / protocol.value.sync_low)
+        delay = int(self._rx_timings[0] / protocol.sync_low)
         delay_tolerance = delay * self.rx_tolerance / 100
 
         for i in range(1, change_count, 2):
-            if (self._rx_timings[i] - delay * protocol.value.zero_high < delay_tolerance and
-                    self._rx_timings[i + 1] - delay * protocol.value.zero_low < delay_tolerance):
+            if (self._rx_timings[i] - delay * protocol.zero_high < delay_tolerance and
+                    self._rx_timings[i + 1] - delay * protocol.zero_low < delay_tolerance):
                 code <<= 1
-            elif (self._rx_timings[i] - delay * protocol.value.one_high < delay_tolerance and
-                  self._rx_timings[i + 1] - delay * protocol.value.one_low < delay_tolerance):
+            elif (self._rx_timings[i] - delay * protocol.one_high < delay_tolerance and
+                  self._rx_timings[i + 1] - delay * protocol.one_low < delay_tolerance):
                 code <<= 1
                 code |= 1
             else:

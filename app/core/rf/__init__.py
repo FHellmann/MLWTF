@@ -38,4 +38,4 @@ class Signal(object):
     code = attr.ib(validator=instance_of(int))
     pulselength = attr.ib(validator=instance_of(int))
     bit_length = attr.ib(validator=instance_of(int))
-    protocol = attr.ib(validator=instance_of(ProtocolType))
+    protocol = attr.ib(validator=instance_of(Protocol))
