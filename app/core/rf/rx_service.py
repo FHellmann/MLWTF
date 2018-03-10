@@ -27,6 +27,7 @@ class RxService:
         result = []
 
         for signal in self.signal_list:
+            _LOGGER.debug("Signal-Time=" + str(signal.time) + " <==> Since=" + str(since))
             if signal.time >= since:
                 result.append(signal)
 
