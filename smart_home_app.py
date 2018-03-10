@@ -5,9 +5,7 @@
 
 import logging
 
-from app import create_app
-
-app = create_app()
+from app import app
 
 if __name__ == '__main__':
     logFormatStr = '[%(asctime)s] p%(process)s {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s'

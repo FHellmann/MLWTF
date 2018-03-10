@@ -12,7 +12,7 @@ from datetime import datetime
 
 from RPi import GPIO
 
-from . import Signal, ProtocolType
+from .models import Signal, ProtocolType
 
 MAX_CHANGES = 67
 
@@ -43,7 +43,7 @@ class Device:
         self._rx_change_count = 0
         self._rx_repeat_count = 0
         # successful RX values
-        self.rx_signal = None
+        self.listener = None
 
         GPIO.setmode(GPIO.BCM)
         _LOGGER.debug("Using GPIO " + str(gpio))
@@ -157,6 +157,9 @@ class Device:
             _LOGGER.debug("RX disabled")
         return True
 
+    def add_rx_listener(self, listener):
+        self.listener = listener
+
     # pylint: disable=unused-argument
     def rx_callback(self, gpio):
         """RX callback for GPIO event detection. Handle basic signal detection."""
@@ -170,7 +173,6 @@ class Device:
                 if self._rx_repeat_count == 2:
                     for name, protocol in ProtocolType.__members__.items():
                         if self._rx_waveform(protocol.value, self._rx_change_count):
-                            _LOGGER.debug("RX code " + str(self.rx_signal.code))
                             break
                     self._rx_repeat_count = 0
             self._rx_change_count = 0
@@ -199,8 +201,9 @@ class Device:
             else:
                 return False
 
-        if self._rx_change_count > 6 and code != 0:
-            self.rx_signal = Signal(datetime.utcnow(), code, delay, int(change_count / 2), protocol)
+        if self._rx_change_count > 6 and code != 0 and not self.listener:
+            self.listener(Signal(datetime.utcnow(), code, delay, int(change_count / 2), protocol))
+            _LOGGER.debug("RX code " + str(code))
             return True
 
         return False

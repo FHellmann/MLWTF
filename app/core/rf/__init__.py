@@ -1,42 +1,41 @@
+#!/usr/bin/python
 """
     Author: Fabio Hellmann <info@fabio-hellmann.de>
-
-    Sending and receiving 433/315Mhz signals with low-cost GPIO RF Modules on a Raspberry Pi.
-
-    Original: https://github.com/milaq/rpi-rf
 """
 
-from datetime import datetime
-from enum import Enum, unique
-
-from attr import s, ib
-from attr.validators import instance_of
+from . import rf_rpi
+from ..gpio import RaspberryPi3 as GPIO_PI
+from app.database import RfSignal, db_add
 
 
-@s(frozen=True)
-class Protocol(object):
-    pulse_length = ib(validator=instance_of(int))
-    sync_high = ib(validator=instance_of(int))
-    sync_low = ib(validator=instance_of(int))
-    zero_high = ib(validator=instance_of(int))
-    zero_low = ib(validator=instance_of(int))
-    one_high = ib(validator=instance_of(int))
-    one_low = ib(validator=instance_of(int))
+def send(signal):
+    _rx_device.disable_rx()
+    success = _tx_device.tx_code(signal)
+    _rx_device.enable_rx()
+    return success
 
 
-@unique
-class ProtocolType(Enum):
-    PL_350 = Protocol(350, 1, 31, 1, 3, 3, 1)
-    PL_650 = Protocol(650, 1, 10, 1, 2, 2, 1)
-    PL_100 = Protocol(100, 30, 71, 4, 11, 9, 6)
-    PL_380 = Protocol(380, 1, 6, 1, 3, 3, 1)
-    PL_500 = Protocol(500, 6, 14, 1, 2, 2, 1)
+def _convert(signal):
+    return RfSignal(
+        code=signal.code,
+        pulse_length=signal.pulse_length,
+        bit_length=signal.bit_length,
+        sync_high=signal.protocol.sync_high,
+        sync_low=signal.protocol.sync_low,
+        zero_high=signal.protocol.zero_high,
+        zero_low=signal.protocol.zero_low,
+        one_high=signal.protocol.one_high,
+        one_low=signal.protocol.one_low
+    )
 
 
-@s(frozen=True)
-class Signal(object):
-    time = ib(validator=instance_of(datetime))
-    code = ib(validator=instance_of(int))
-    pulse_length = ib(validator=instance_of(int))
-    bit_length = ib(validator=instance_of(int))
-    protocol = ib(validator=instance_of(Protocol))
+def _receive(signal):
+    db_add(_convert(signal))
+
+
+_rx_device = rf_rpi.Device(GPIO_PI.GPIO_27.value)
+_rx_device.enable_rx()
+_rx_device.add_rx_listener(_receive)
+
+_tx_device = rf_rpi.Device(GPIO_PI.GPIO_17.value)
+_tx_device.enable_tx()
