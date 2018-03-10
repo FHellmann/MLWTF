@@ -3,6 +3,7 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
+from flask import request
 from flask_restplus import Namespace, Resource, fields, reqparse
 
 from ..core.rf.rx_service import RxService
@@ -35,9 +36,6 @@ signal_model = ns_rf.model('Signal', {
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('since', type=int)
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('signal', type=signal_model, required=True, location='form')
-
 
 @ns_rf.route('/signals')
 class SignalResource(Resource):
@@ -51,10 +49,9 @@ class SignalResource(Resource):
 
     @ns_rf.response(201, 'Signal send successful')
     @ns_rf.response(500, 'Failed to send signal')
-    @ns_rf.expect(post_parser, validate=True)
+    @ns_rf.expect(fields=signal_model, validate=True)
     def post(self):
-        args = post_parser.args()
-        signal = args['signal']
+        signal = request.json()
         if tx_service.send(signal):
             return None, 201
         return None, 500
