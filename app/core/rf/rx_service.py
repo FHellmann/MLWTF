@@ -50,7 +50,10 @@ class RxService:
 
                 # To prevent a memory leak -> remove all cached entries older then 15 minutes
                 cache_time_limit = 15 * 60
-                while (datetime.now() - self.signal_list[0].time).total_seconds() < cache_time_limit:
+                while not self.signal_list and \
+                        (datetime.now() - self.signal_list[0].time).total_seconds() < cache_time_limit:
+                    _LOGGER.debug("Pop signal with age '" +
+                                  str((datetime.now() - self.signal_list[0].time).total_seconds()) + "' seconds")
                     self.signal_list.pop(0)
 
             time.sleep(0.01)
