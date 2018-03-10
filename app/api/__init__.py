@@ -6,7 +6,7 @@
 import logging
 from flask import Blueprint
 from flask_restplus import Api
-from .api_rf import ns_rf
+from app.api.api_rf import ns_rf
 
 _LOGGER = logging.getLogger(__name__)
 
