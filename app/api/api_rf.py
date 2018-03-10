@@ -51,9 +51,10 @@ class SignalResource(Resource):
 
     @ns_rf.param('since', 'The time since when the signals should be fetched')
     def get(self):
+        schema = SignalSchema(many=True)
         args = get_parser.parse_args()
         since = args['since']
-        return rx_service.get_results(since)
+        return schema.dump(rx_service.get_results(since))
 
     @ns_rf.response(201, 'Signal send successful')
     @ns_rf.response(500, 'Failed to send signal')
