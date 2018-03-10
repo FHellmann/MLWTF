@@ -36,7 +36,7 @@ get_parser = reqparse.RequestParser()
 get_parser.add_argument('since', type=int)
 
 post_parser = reqparse.RequestParser()
-post_parser.add_argument('signal', type=signal_model, required=True)
+post_parser.add_argument('signal', type=signal_model, required=True, location='form')
 
 
 @ns_rf.route('/signals')
