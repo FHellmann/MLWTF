@@ -200,7 +200,7 @@ class Device:
                 return False
 
         if self._rx_change_count > 6 and code != 0:
-            self.rx_signal = Signal(datetime.now(), code, delay, int(change_count / 2), protocol)
+            self.rx_signal = Signal(datetime.utcnow(), code, delay, int(change_count / 2), protocol)
             return True
 
         return False
