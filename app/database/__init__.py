@@ -6,6 +6,7 @@
 import os
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils import database_exists
 
 
 db = SQLAlchemy()
@@ -14,10 +15,14 @@ session = db.session
 
 def setup(app):
     basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'  # In-Memory usage for testing
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'my-smart-home.db')
-    db.init_app(app)
-    db.create_all()
+    database_uri = 'sqlite://'  # In-Memory usage for testing
+    # database_uri = 'sqlite:///' + os.path.join(basedir, 'my-smart-home.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
+
+    with app.test_request_context():
+        db.init_app(app)
+        if not database_exists(database_uri):
+                db.create_all()
 
 
 def db_add(item):
