@@ -9,6 +9,7 @@ The features listed here are planned so far:
 - General
     - [x] [Web App](https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/WEB_APP.md)
     - [x] [Rest Api](https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/REST_API.md)
+    - [x] [Database]((https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/Database.md))
 - Sensors
     - [x] [RX-Receiver](https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/RF.md)
     - [ ] Thermometer
@@ -31,8 +32,29 @@ My Smart Home was designed to passively analyze the behavior of the inhabitants 
 
 The server has a transceiver for the frequencies 433 MHz. The server uses these frequencies to communicate with the sensors, actuators and other servers. Because the servers communicate with other components over these frequencies, the network is independent of Wi-Fi routers in the event of a power outage. Using an internal backup power supply, the servers can continue to communicate with other off-grid components.
 
-### Software Architecture
-*In work*
+## Setup
+
+1. Define environment variables
+
+    ```bash
+    export FLASK_CONFIG=production|development|testing
+    export FLASK_APP=run.py
+    ```
+    
+2. Intialise the database
+
+    ```bash
+    flask db init
+    flask db migrate
+    flask db upgrade
+    ```
+
+3. Run app
+
+    ```bash
+    flask run
+    ```
+
 
 ## Changelog
 [See changelog](https://github.com/FHellmann/My-Smart-Home/blob/master/CHANGELOG.md)

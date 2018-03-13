@@ -14,7 +14,7 @@ rest_api = Blueprint('api', __name__)
 
 api = Api(
     rest_api,
-    version='0.1',
+    version='0.2',
     title='My Smart Home - Rest API',
     description='The rest api allows to access all the sensor data and control the actuators.',
     contact_email='info@fabio-hellmann.de'

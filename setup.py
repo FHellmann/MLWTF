@@ -16,7 +16,7 @@ with open('requirements.txt') as req:
 
 setup(
     name='My Smart Home',
-    version='0.1.0',
+    version='0.2.0',
     description='This project is for the use of machine learning with smart home',
     long_description=readme + '\n\n' + changelog,
     author='Fabio Hellmann',
