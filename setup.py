@@ -24,4 +24,5 @@ setup(
     url='https://github.com/FHellmann/My-Smart-Home',
     packages=find_packages(exclude=['tests*']),
     install_requires=required,
+    test_suite='tests',
 )
