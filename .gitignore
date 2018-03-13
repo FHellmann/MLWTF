@@ -102,3 +102,7 @@ ENV/
 
 # PyCharme
 .idea/
+
+# Database
+*.db
+*.json
