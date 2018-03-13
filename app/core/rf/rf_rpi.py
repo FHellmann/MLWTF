@@ -24,7 +24,7 @@ class Device:
 
     # pylint: disable=too-many-instance-attributes,too-many-arguments
     def __init__(self, gpio,
-                 tx_proto=ProtocolType.PL_350, tx_pulse_length=None, tx_repeat=10, tx_length=24, rx_tolerance=80):
+                 tx_proto=ProtocolType.PL_350.value, tx_pulse_length=None, tx_repeat=10, tx_length=24, rx_tolerance=80):
         """Initialize the RF device."""
         self.gpio = gpio
         self.tx_enabled = False
@@ -32,7 +32,7 @@ class Device:
         if tx_pulse_length:
             self.tx_pulse_length = tx_pulse_length
         else:
-            self.tx_pulse_length = tx_proto.value.pulse_length
+            self.tx_pulse_length = tx_proto.pulse_length
         self.tx_repeat = tx_repeat
         self.tx_length = tx_length
         self.rx_enabled = False
@@ -43,10 +43,11 @@ class Device:
         self._rx_change_count = 0
         self._rx_repeat_count = 0
         # successful RX values
-        self.listener = None
+        self._rx_listener = None
 
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
-        _LOGGER.debug("Using GPIO " + str(gpio))
+        _LOGGER.info("Using GPIO " + str(gpio))
 
     def cleanup(self):
         """Disable TX and RX and clean up GPIO."""
@@ -54,7 +55,7 @@ class Device:
             self.disable_tx()
         if self.rx_enabled:
             self.disable_rx()
-        _LOGGER.debug("Cleanup")
+        _LOGGER.info("Cleanup")
         GPIO.cleanup()
 
     def enable_tx(self):
@@ -65,7 +66,7 @@ class Device:
         if not self.tx_enabled:
             self.tx_enabled = True
             GPIO.setup(self.gpio, GPIO.OUT)
-            _LOGGER.debug("TX enabled")
+            _LOGGER.info("TX enabled")
         return True
 
     def disable_tx(self):
@@ -74,7 +75,7 @@ class Device:
             # set up GPIO pin as input for safety
             GPIO.setup(self.gpio, GPIO.IN)
             self.tx_enabled = False
-            _LOGGER.debug("TX disabled")
+            _LOGGER.info("TX disabled")
         return True
 
     def tx_code(self, signal):
@@ -92,12 +93,12 @@ class Device:
         else:
             self.tx_pulse_length = self.tx_proto.pulse_length
         rawcode = format(signal.code, '#0{}b'.format(self.tx_length + 2))[2:]
-        _LOGGER.debug("TX code: " + str(signal.code))
+        _LOGGER.info("TX code: " + str(signal.code))
         return self.tx_bin(rawcode)
 
     def tx_bin(self, rawcode):
         """Send a binary code."""
-        _LOGGER.debug("TX bin: " + str(rawcode))
+        _LOGGER.info("TX bin: " + str(rawcode))
         for _ in range(0, self.tx_repeat):
             for byte in range(0, self.tx_length):
                 if rawcode[byte] == '0':
@@ -146,7 +147,7 @@ class Device:
             GPIO.setup(self.gpio, GPIO.IN)
             GPIO.add_event_detect(self.gpio, GPIO.BOTH)
             GPIO.add_event_callback(self.gpio, self.rx_callback)
-            _LOGGER.debug("RX enabled")
+            _LOGGER.info("RX enabled")
         return True
 
     def disable_rx(self):
@@ -154,11 +155,11 @@ class Device:
         if self.rx_enabled:
             GPIO.remove_event_detect(self.gpio)
             self.rx_enabled = False
-            _LOGGER.debug("RX disabled")
+            _LOGGER.info("RX disabled")
         return True
 
     def add_rx_listener(self, listener):
-        self.listener = listener
+        self._rx_listener = listener
 
     # pylint: disable=unused-argument
     def rx_callback(self, gpio):
@@ -201,9 +202,11 @@ class Device:
             else:
                 return False
 
-        if self._rx_change_count > 6 and code != 0 and not self.listener:
-            self.listener(Signal(datetime.utcnow(), code, delay, int(change_count / 2), protocol))
-            _LOGGER.debug("RX code " + str(code))
+        if self._rx_change_count > 6 and code != 0:
+            _LOGGER.info("RX code " + str(code))
+            if not(self._rx_listener is None):
+                timestamp = datetime.utcnow()
+                self._rx_listener(Signal(timestamp, code, delay, int(change_count / 2), protocol))
             return True
 
         return False
