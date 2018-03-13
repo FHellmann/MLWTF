@@ -3,7 +3,7 @@
 The database is realized with the no-sql
 [TinyDB](http://tinydb.readthedocs.io/en/latest/index.html).
 
-# Radio Frequency
+## Radio Frequency
 The radio frequency data is store in an own "table" called _rf_table_.
 The sub-items are arranged in a pseudo list.
 Each item is numbered/indexed. The index item contains two main items.
