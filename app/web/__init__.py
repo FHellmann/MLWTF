@@ -3,12 +3,8 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from flask_bootstrap import Bootstrap
-
 
 def register_blueprints(app):
-    Bootstrap(app)
-
     from .home import home as home_blueprint
     app.register_blueprint(home_blueprint)
 

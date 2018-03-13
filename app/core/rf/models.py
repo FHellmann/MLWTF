@@ -12,13 +12,13 @@ from attr.validators import instance_of
 
 @s(frozen=True)
 class Protocol(object):
-    pulse_length = ib(validator=instance_of(int))
-    sync_high = ib(validator=instance_of(int))
-    sync_low = ib(validator=instance_of(int))
-    zero_high = ib(validator=instance_of(int))
-    zero_low = ib(validator=instance_of(int))
-    one_high = ib(validator=instance_of(int))
-    one_low = ib(validator=instance_of(int))
+    pulse_length = ib(validator=instance_of(int), type=int)
+    sync_high = ib(validator=instance_of(int), type=int)
+    sync_low = ib(validator=instance_of(int), type=int)
+    zero_high = ib(validator=instance_of(int), type=int)
+    zero_low = ib(validator=instance_of(int), type=int)
+    one_high = ib(validator=instance_of(int), type=int)
+    one_low = ib(validator=instance_of(int), type=int)
 
 
 @unique
@@ -32,8 +32,14 @@ class ProtocolType(Enum):
 
 @s(frozen=True)
 class Signal(object):
-    time = ib(validator=instance_of(datetime))
-    code = ib(validator=instance_of(int))
-    pulse_length = ib(validator=instance_of(int))
-    bit_length = ib(validator=instance_of(int))
-    protocol = ib(validator=instance_of(Protocol))
+    time = ib(validator=instance_of(datetime), type=datetime)
+    code = ib(validator=instance_of(int), type=int)
+    pulse_length = ib(validator=instance_of(int), type=int)
+    bit_length = ib(validator=instance_of(int), type=int)
+    protocol = ib(validator=instance_of(Protocol), type=Protocol)
+
+
+@s(frozen=True)
+class SignalContainer(object):
+    signal = ib(validator=instance_of(Signal), type=Signal)
+    received = ib(validator=instance_of(bool), type=bool)
