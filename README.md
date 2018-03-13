@@ -9,7 +9,7 @@ The features listed here are planned so far:
 - General
     - [x] [Web App](https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/WEB_APP.md)
     - [x] [Rest Api](https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/REST_API.md)
-    - [x] [Database]((https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/Database.md))
+    - [x] [Database](https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/Database.md)
 - Sensors
     - [x] [RX-Receiver](https://github.com/FHellmann/My-Smart-Home/blob/master/doc/features/general/RF.md)
     - [ ] Thermometer
