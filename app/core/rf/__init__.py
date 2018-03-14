@@ -8,36 +8,32 @@
 import logging
 
 from datetime import datetime
-from typing import List
 
 from . import rf_rpi
-from .models import Protocol, Signal, SignalContainer
+from .models import Protocol, Signal
 from ..gpio import RaspberryPi3 as GPIO_PI
-from app.database import db, Query
-from app.database.cattr_util import converter
+from app.database import db
+from app.database.models import EventType, DataSourceType
+from app.database.converter import converter
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class RfDatabase(object):
     def __init__(self):
-        self.rf_table = db.get().table('rf_table')
+        self.db = db
 
-    def save(self, signal : Signal, received : bool):
-        signal_container = SignalContainer(signal=signal, received=received)
-        signal_container_db = converter.unstructure(signal_container)
-        self.rf_table.insert(signal_container_db)
+    def save_received(self, signal : Signal):
+        return self.db.add_event(converter.unstructure(signal), EventType.RADIO_FREQUENCY, DataSourceType.SENSOR)
+
+    def save_send(self, signal : Signal):
+        return self.db.add_event(converter.unstructure(signal), EventType.RADIO_FREQUENCY, DataSourceType.ACTUATOR)
 
     def get_received_signals_since(self, since : datetime):
-        received_signals_db = self.rf_table.search(
-            (Query().received == True) & (Query().signal.time >= since.timestamp())
-        )
-        search = converter.structure(received_signals_db, List[SignalContainer])
-
+        result_events = self.db.get_events_by(EventType.RADIO_FREQUENCY, DataSourceType.SENSOR, since)
         result = []
-        for signal_container in search:
-            result.append(signal_container.signal)
-
+        for event in result_events:
+            result.append(converter.structure(event.data, Signal))
         return result
 
 
@@ -62,12 +58,11 @@ class RfController(object):
     def send(self, signal : Signal):
         _LOGGER.info("Sending rf signal: " + str(signal))
         success = self._tx_device.tx_code(signal)
-        self._db.save(Signal(datetime.utcnow(), signal.code, signal.pulse_length, signal.bit_length, signal.protocol),
-                      False)
+        self._db.save_send(signal)
         return success
 
     def _receive(self, signal : Signal):
         _LOGGER.info("Receiving rf signal: " + str(signal))
-        self._db.save(signal, True)
+        self._db.save_received(signal)
 
 rf_controller = RfController()

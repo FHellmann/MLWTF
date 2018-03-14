@@ -32,14 +32,8 @@ class ProtocolType(Enum):
 
 @s(frozen=True)
 class Signal(object):
-    time = ib(validator=instance_of(datetime), type=datetime)
     code = ib(validator=instance_of(int), type=int)
     pulse_length = ib(validator=instance_of(int), type=int)
     bit_length = ib(validator=instance_of(int), type=int)
     protocol = ib(validator=instance_of(Protocol), type=Protocol)
-
-
-@s(frozen=True)
-class SignalContainer(object):
-    signal = ib(validator=instance_of(Signal), type=Signal)
-    received = ib(validator=instance_of(bool), type=bool)
+    time = ib(validator=instance_of(datetime), type=datetime, default=datetime.utcnow())

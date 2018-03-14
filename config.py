@@ -30,6 +30,7 @@ class TestingConfig(Config):
 
     DATABASE_URI = None
 
+    DEBUG = True
     TESTING = True
 
     LOG_HANDLER = logging.StreamHandler()
@@ -44,7 +45,7 @@ class DevelopmentConfig(Config):
 
     DATABASE_URI = os.path.join(Config.basedir, 'mysmarthome-dev.db.json')
 
-    DEBUG = True
+    #DEBUG = True
 
     LOG_HANDLER = logging.StreamHandler()
     LOG_HANDLER.setLevel(logging.DEBUG)
