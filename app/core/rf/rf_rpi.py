@@ -205,7 +205,8 @@ class Device:
         if self._rx_change_count > 6 and code != 0:
             _LOGGER.info("RX code " + str(code))
             if not(self._rx_listener is None):
-                signal = Signal(code=code, pulse_length=delay, bit_length=int(change_count / 2), protocol=protocol)
+                signal = Signal(code=code, pulse_length=delay, bit_length=int(change_count / 2), protocol=protocol,
+                                timestamp=datetime.utcnow())
                 self._rx_listener(signal)
             return True
 

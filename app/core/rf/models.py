@@ -36,3 +36,4 @@ class Signal(object):
     pulse_length = ib(validator=instance_of(int), type=int)
     bit_length = ib(validator=instance_of(int), type=int)
     protocol = ib(validator=instance_of(Protocol), type=Protocol)
+    timestamp = ib(validator=instance_of(datetime), type=datetime)
