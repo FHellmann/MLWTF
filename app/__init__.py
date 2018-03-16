@@ -14,7 +14,6 @@ from flask_bootstrap import Bootstrap
 from enum import Enum, unique
 
 from .database import db
-from .core.scheduler import scheduler
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -54,19 +53,17 @@ class Config(object):
 
 
 def create_app(env_name):
-    config = Config(environment=Environment(env_name) if not(env_name is None) else Environment.PRODUCTION)
-
-    _LOGGER.info("Setup flask app with env=" + str(env_name))
-
-    # Initialise flask and database
+    # Initialise flask
     app = Flask(__name__, static_url_path='/app', static_folder='web/static', template_folder='web/templates')
+
+    Bootstrap(app)
+
+    # Setup configurations
+    config = Config(environment=Environment(env_name) if not(env_name is None) else Environment.PRODUCTION)
 
     db_path = config.database()['uri']
     db.setup(db_path)
 
-    Bootstrap(app)
-
-    # Logging
     logging.config.dictConfig(config.logging())
 
     # Setup web app and rest api
@@ -77,7 +74,5 @@ def create_app(env_name):
     rest_api(app)
 
     _LOGGER.info("Flask app is ready")
-
-    scheduler.start()
 
     return app
