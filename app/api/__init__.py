@@ -7,6 +7,7 @@ import logging
 from flask import Blueprint
 from flask_restplus import Api
 from app.api.api_rf import ns_rf
+from app.api.api_dht import ns_dht
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,12 +21,12 @@ api = Api(
     contact_email='info@fabio-hellmann.de'
 )
 api.add_namespace(ns_rf)
+api.add_namespace(ns_dht)
 
 
 @api.errorhandler
-def default_error_handler(e):
-    message = 'An unhandled exception occurred.'
-    _LOGGER.exception(message)
+def default_error_handler(e: Exception):
+    _LOGGER.exception('An unhandled exception occurred.')
 
 
 def register_blueprints(app):
