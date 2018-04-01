@@ -11,3 +11,4 @@ cattrs==0.6.0
 typing==3.6.4
 marshmallow==3.0.0b7
 PyYAML==3.12
+bluepy==1.1.4
