@@ -6,8 +6,9 @@
 import logging
 from flask import Blueprint
 from flask_restplus import Api
-from app.api.api_rf import ns_rf
-from app.api.api_dht import ns_dht
+from app.api.api_radiofrequency import ns_rf
+from app.api.api_thermometer import ns_tm
+from app.api.api_thermostat import ns_ts
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,7 +22,8 @@ api = Api(
     contact_email='info@fabio-hellmann.de'
 )
 api.add_namespace(ns_rf)
-api.add_namespace(ns_dht)
+api.add_namespace(ns_tm)
+api.add_namespace(ns_ts)
 
 
 @api.errorhandler

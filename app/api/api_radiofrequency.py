@@ -9,9 +9,9 @@ from marshmallow import Schema, fields as ma_fields, post_load
 
 from datetime import datetime
 
-from app.core.rf import rf_controller, Signal, Protocol
+from app.core.radiofrequency import rf_controller, Signal, Protocol
 
-ns_rf = Namespace('rf', description='The radio frequency interface')
+ns_rf = Namespace('radiofrequency', description='The radio frequency interface')
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('since', type=int)
