@@ -8,10 +8,18 @@
 from time import sleep
 from statistics import mean
 from datetime import datetime
+from enum import Enum, unique
 
-from .models import DHTResult, DHTErrorCode
+from .models import ThermometerEntry
 
 GPIO = None
+
+
+@unique
+class DHTErrorCode(Enum):
+    ERR_NO_ERROR = 0
+    ERR_MISSING_DATA = 1
+    ERR_CHECKSUM = 2
 
 
 class DHT:
@@ -33,33 +41,19 @@ class DHT:
         # GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
 
-    def get_result(self, max_tries=5):
-        """Try to get a valid result from the sensor within supplied limit.
-        Returns the tuple (temperature, humidity) or None if 'max_tries'
-        has been reached.
-        """
-        global dht_result
-        for try_num in range(0, max_tries):
-            dht_error, dht_result = self.get_result_once()
-            if dht_error == DHTErrorCode.ERR_NO_ERROR:
-                return DHTErrorCode.ERR_NO_ERROR, dht_result
-            else:
-                sleep(1)
-        return dht_result
-
-    def get_result_once(self):
+    def get_result(self):
         """Only query DHT11 once.
         Returns the tuple (temperature, humidity) or throws exception.
         """
         byte_array = self._get_bytes_from_dht()
         if type(byte_array) is DHTErrorCode:
-            return byte_array, None
+            return None
 
         checksum = self._checksum(byte_array)
         if type(checksum) is DHTErrorCode:
-            return checksum, None
+            return None
 
-        return DHTErrorCode.ERR_NO_ERROR, self._get_temp_humidity_tuple(byte_array)
+        return self._get_temp_humidity_tuple(byte_array)
 
     def _get_temp_humidity_tuple(self, byte_array):
         """Abstract method implemented by DHT11/DHT22"""
@@ -175,7 +169,7 @@ class DHT11(DHT):
     def _get_temp_humidity_tuple(self, byte_array):
         rel_humidity = byte_array[0]
         temp = byte_array[2]
-        return DHTResult(temperature=temp, humidity=rel_humidity, timestamp=datetime.utcnow())
+        return ThermometerEntry(temperature=temp, humidity=rel_humidity, timestamp=datetime.utcnow())
 
 
 class DHT22(DHT):
@@ -194,4 +188,4 @@ class DHT22(DHT):
             neg = -1
         temp = ((byte_array[2] << 8) + byte_array[3]) * 0.1 * neg
 
-        return DHTResult(temperature=round(temp, 1), humidity=round(rel_humidity, 1), timestamp=datetime.utcnow())
+        return ThermometerEntry(temperature=round(temp, 1), humidity=round(rel_humidity, 1), timestamp=datetime.utcnow())
