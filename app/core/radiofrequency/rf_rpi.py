@@ -3,7 +3,7 @@
 
     Sending and receiving 433/315Mhz signals with low-cost GPIO RF Modules on a Raspberry Pi.
 
-    Original: https://github.com/milaq/rpi-rf
+    Original: https://github.com/milaq/rpi-radiofrequency
 """
 
 import logging

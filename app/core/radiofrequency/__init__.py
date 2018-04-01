@@ -56,13 +56,13 @@ class RfController(object):
         return self._db.get_received_signals_since(since)
 
     def send(self, signal : Signal):
-        _LOGGER.info("Sending rf signal: " + str(signal))
+        _LOGGER.info("Sending radiofrequency signal: " + str(signal))
         success = self._tx_device.tx_code(signal)
         self._db.save_send(signal)
         return success
 
     def _receive(self, signal : Signal):
-        _LOGGER.info("Receiving rf signal: " + str(signal))
+        _LOGGER.info("Receiving radiofrequency signal: " + str(signal))
         self._db.save_received(signal)
 
 rf_controller = RfController()
