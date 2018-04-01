@@ -19,7 +19,7 @@ def index():
 @settings.route('/rf_devices')
 def rf_devices():
     """
-    Render the rf-device template on the /rf_devices route
+    Render the radiofrequency-device template on the /rf_devices route
     """
     return render_template('settings/rf_devices.html', title="Settings")
 
