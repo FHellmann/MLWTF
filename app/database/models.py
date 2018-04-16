@@ -26,6 +26,7 @@ class EventType(Enum):
     """
     RADIO_FREQUENCY = 'radio_frequency'
     HUMIDITY_TEMPERATURE = 'humidity_temperature'
+    THERMOSTAT = 'thermostat'
 
 
 @s(frozen=True)

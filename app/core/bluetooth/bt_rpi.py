@@ -17,12 +17,12 @@ _LOGGER = logging.getLogger(__name__)
 class BTLEConnection(btle.DefaultDelegate):
     """Representation of a BTLE Connection."""
 
-    def __init__(self, mac):
+    def __init__(self, device: BluetoothDevice):
         """Initialize the connection."""
         btle.DefaultDelegate.__init__(self)
 
         self._conn = None
-        self._mac = mac
+        self._device = device
         self._callbacks = {}
 
     def __enter__(self):
@@ -33,18 +33,18 @@ class BTLEConnection(btle.DefaultDelegate):
         """
         self._conn = btle.Peripheral()
         self._conn.withDelegate(self)
-        _LOGGER.debug("Trying to connect to %s", self._mac)
+        _LOGGER.debug("Trying to connect to %s", self._device.mac)
         try:
-            self._conn.connect(self._mac)
+            self._conn.connect(self._device.mac)
         except btle.BTLEException as ex:
-            _LOGGER.debug("Unable to connect to the device %s, retrying: %s", self._mac, ex)
+            _LOGGER.debug("Unable to connect to the device %s, retrying: %s", self._device.mac, ex)
             try:
-                self._conn.connect(self._mac)
+                self._conn.connect(self._device.mac)
             except Exception as ex2:
-                _LOGGER.debug("Second connection try to %s failed: %s", self._mac, ex2)
+                _LOGGER.debug("Second connection try to %s failed: %s", self._device.mac, ex2)
                 raise
 
-        _LOGGER.debug("Connected to %s", self._mac)
+        _LOGGER.debug("Connected to %s", self._device.mac)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -59,9 +59,8 @@ class BTLEConnection(btle.DefaultDelegate):
             self._callbacks[handle](data)
 
     @property
-    def mac(self):
-        """Return the MAC address of the connected device."""
-        return self._mac
+    def device(self):
+        return self._device
 
     def set_callback(self, handle, function):
         """Set the callback for a Notification handle. It will be called with the parameter data, which is binary."""
@@ -99,12 +98,12 @@ class BluetoothConnector(object):
             #    print("  %s = %s", desc, value)
         return result
 
-    def connect(self, device : BluetoothDevice):
+    def connect(self, device : BluetoothDevice, callback_function):
         self.curr_conn = BTLEConnection(device.mac)
-        self.curr_conn.set_callback(self.handle, self._callback_function)
+        self.curr_conn.set_callback(self.handle, callback_function)
+
+    def disconnect(self):
+        self.curr_conn = None
 
     def send(self, value):
         self.curr_conn.make_request(self.handle, value)
-
-    def _callback_function(self, value):
-        _LOGGER.debug("Reading %s from device %s", value, self.curr_device.mac)

@@ -5,11 +5,10 @@
 
 import logging
 from datetime import datetime
-from .models import ThermostatEntry, ThermostatManufacturer
-from ..gpio import RaspberryPi3 as GPIO_PI
-from app.core.scheduler import scheduler, SchedulerTask
+from app.core.bluetooth import bt_controller, BluetoothDevice
+from app.core.thermostat.models import ThermostatEntry, ThermostatManufacturer
 from app.database import db
-from app.database.models import EventType, DataSourceType
+from app.database.models import DataSource, DataSourceType
 from app.database.converter import converter
 
 _LOGGER = logging.getLogger(__name__)
@@ -37,22 +36,22 @@ class ThermostatDatabase(object):
 class ThermostatController(object):
     def __init__(self):
         self.db = ThermostatDatabase()
-        self.dht = DHT22(pin=GPIO_PI.GPIO_22.value)
+        self.bt = bt_controller
 
-        scheduler.register_task(SchedulerTask(name='thermometer', interval=60.0, delay=10.0,
-                                              function=lambda: self.read()))
+    def scan(self):
+        return self.bt.scan()
 
-    def get_last(self):
-        return self.db.get_last()
+    def connect(self, device : BluetoothDevice):
+        self.bt.connect(device, self._callback_function)
+
+    def disconnect(self):
+        self.bt.disconnect()
 
     def get_since(self, since: datetime):
         return self.db.get_since(since)
 
-    def read(self):
-        result = self.dht.get_result()
-        if not(result is None):
-            _LOGGER.info("Thermometer: %s", str(result))
-            self.db.save(result)
+    def _callback_function(self, value):
+        _LOGGER.debug("Reading %s from device %s", value, self.bt.mac)
 
 
-thermometer_controller = ThermometerController()
+thermostat_controller = ThermostatController()

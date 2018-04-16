@@ -14,8 +14,11 @@ class BluetoothController(object):
     def scan(self):
         return self.btle_rpi.scan()
 
-    def connect(self, device: BluetoothDevice):
-        self.btle_rpi.connect(device)
+    def connect(self, device: BluetoothDevice, callback_function):
+        self.btle_rpi.connect(device, callback_function)
+
+    def disconnect(self):
+        self.btle_rpi.disconnect()
 
     def write(self, value):
         self.btle_rpi.send(value)
