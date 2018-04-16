@@ -20,13 +20,21 @@ class DataSourceType(Enum):
 
 
 @unique
-class EventType(Enum):
+class DataSource(Enum):
     """
     The event type describes the type of data which is hold inside the data block
     """
-    RADIO_FREQUENCY = 'radio_frequency'
-    HUMIDITY_TEMPERATURE = 'humidity_temperature'
+    LOW_RADIO_FREQUENCY = 'radio_frequency_433Mhz'
+    THERMOMETER = 'thermometer'
     THERMOSTAT = 'thermostat'
+
+
+@s(frozen=True)
+class User(object):
+    """
+    The user who triggered an event
+    """
+    name = ib(validator=instance_of(str), type=str, default='System')
 
 
 @s(frozen=True)
@@ -35,18 +43,10 @@ class Event(object):
     The event is a global container for every incoming and outgoing signal
     """
     data = ib()
-    event_type = ib(validator=instance_of(EventType), type=EventType)
+    data_source = ib(validator=instance_of(DataSource), type=DataSource)
     data_source_type = ib(validator=instance_of(DataSourceType), type=DataSourceType)
     timestamp = ib(validator=instance_of(datetime), type=datetime, default=datetime.utcnow())
-
-
-@s(frozen=True)
-class NamedEvent(object):
-    """
-    The named event will be used from devices to recognize events by their names
-    """
-    name = ib(validator=instance_of(str), type=str)
-    event = ib(validator=instance_of(Event), type=Event)
+    user = ib(validator=instance_of(User), type=User, default=User())
 
 
 @s(frozen=True)
@@ -56,5 +56,4 @@ class Device(object):
     """
     data = ib()
     name = ib(validator=instance_of(str), type=str)
-    location = ib(validator=instance_of(str), type=str)
     description = ib(validator=instance_of(str), type=str, default='')

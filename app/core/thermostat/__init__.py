@@ -19,18 +19,18 @@ class ThermostatDatabase(object):
         self.db = db
 
     def save(self, dht_result: ThermostatEntry):
-        return self.db.add_event(dht_result, EventType.HUMIDITY_TEMPERATURE, DataSourceType.SENSOR)
+        return self.db.add_event(dht_result, DataSource.THERMOSTAT, DataSourceType.ACTUATOR)
 
     def get_since(self, since: datetime):
-        result_events = self.db.get_events_by(EventType.HUMIDITY_TEMPERATURE, DataSourceType.SENSOR, since)
+        result_events = self.db.get_events_by(DataSource.THERMOSTAT, DataSourceType.ACTUATOR, since)
         result = []
         for event in result_events:
-            result.append(converter.structure(event.data, ThermometerEntry))
+            result.append(converter.structure(event.data, ThermostatEntry))
         return result
 
     def get_last(self):
-        event = self.db.get_last_event(EventType.HUMIDITY_TEMPERATURE, DataSourceType.SENSOR)
-        return converter.structure(event.data, ThermometerEntry)
+        event = self.db.get_last_event(DataSource.THERMOSTAT, DataSourceType.ACTUATOR)
+        return converter.structure(event.data, ThermostatEntry)
 
 
 class ThermostatController(object):

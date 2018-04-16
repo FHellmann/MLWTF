@@ -9,7 +9,7 @@ from .dht_rpi import DHT22, ThermometerEntry
 from ..gpio import RaspberryPi3 as GPIO_PI
 from app.core.scheduler import scheduler, SchedulerTask
 from app.database import db
-from app.database.models import EventType, DataSourceType
+from app.database.models import DataSource, DataSourceType
 from app.database.converter import converter
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,17 +20,17 @@ class ThermometerDatabase(object):
         self.db = db
 
     def save(self, dht_result: ThermometerEntry):
-        return self.db.add_event(dht_result, EventType.HUMIDITY_TEMPERATURE, DataSourceType.SENSOR)
+        return self.db.add_event(dht_result, DataSource.THERMOMETER, DataSourceType.SENSOR)
 
     def get_since(self, since: datetime):
-        result_events = self.db.get_events_by(EventType.HUMIDITY_TEMPERATURE, DataSourceType.SENSOR, since)
+        result_events = self.db.get_events_by(DataSource.THERMOMETER, DataSourceType.SENSOR, since)
         result = []
         for event in result_events:
             result.append(converter.structure(event.data, ThermometerEntry))
         return result
 
     def get_last(self):
-        event = self.db.get_last_event(EventType.HUMIDITY_TEMPERATURE, DataSourceType.SENSOR)
+        event = self.db.get_last_event(DataSource.THERMOMETER, DataSourceType.SENSOR)
         return converter.structure(event.data, ThermometerEntry)
 
 

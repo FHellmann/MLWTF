@@ -10,7 +10,7 @@ from tinydb.storages import MemoryStorage
 from typing import List
 from datetime import datetime
 
-from .models import Event, EventType, DataSourceType
+from .models import Event, DataSource, DataSourceType
 from .converter import converter
 from app.core.threading_utils import RWLock
 
@@ -39,7 +39,7 @@ class Database:
         self.table_users = self.db.table('users')
         self.table_devices = self.db.table('devices')
 
-    def add_event(self, data, event_type: EventType, data_source_type: DataSourceType):
+    def add_event(self, data, event_type: DataSource, data_source_type: DataSourceType):
         with self.lock.writer():
             event = Event(event_type=event_type, data_source_type=data_source_type, data=data)
             unstructure = converter.unstructure(event)
@@ -51,7 +51,7 @@ class Database:
             event = self.table_events.get(doc_id=event_id)
             return event
 
-    def get_events_by(self, event_type: EventType, data_source_type: DataSourceType,
+    def get_events_by(self, event_type: DataSource, data_source_type: DataSourceType,
                       since: datetime = datetime.utcnow()):
         with self.lock.reader():
             search = self.table_events.search(
@@ -62,7 +62,7 @@ class Database:
             structure = converter.structure(search, List[Event])
             return structure
 
-    def get_last_event(self, event_type: EventType, data_source_type: DataSourceType):
+    def get_last_event(self, event_type: DataSource, data_source_type: DataSourceType):
         with self.lock.reader():
             event_count = len(self.table_events)
 

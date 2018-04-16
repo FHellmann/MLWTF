@@ -13,7 +13,7 @@ from . import rf_rpi
 from .models import Protocol, Signal
 from ..gpio import RaspberryPi3 as GPIO_PI
 from app.database import db
-from app.database.models import EventType, DataSourceType
+from app.database.models import DataSource, DataSourceType
 from app.database.converter import converter
 
 _LOGGER = logging.getLogger(__name__)
@@ -24,13 +24,13 @@ class RfDatabase(object):
         self.db = db
 
     def save_received(self, signal : Signal):
-        return self.db.add_event(converter.unstructure(signal), EventType.RADIO_FREQUENCY, DataSourceType.SENSOR)
+        return self.db.add_event(converter.unstructure(signal), DataSource.LOW_RADIO_FREQUENCY, DataSourceType.SENSOR)
 
     def save_send(self, signal : Signal):
-        return self.db.add_event(converter.unstructure(signal), EventType.RADIO_FREQUENCY, DataSourceType.ACTUATOR)
+        return self.db.add_event(converter.unstructure(signal), DataSource.LOW_RADIO_FREQUENCY, DataSourceType.ACTUATOR)
 
     def get_received_signals_since(self, since : datetime):
-        result_events = self.db.get_events_by(EventType.RADIO_FREQUENCY, DataSourceType.SENSOR, since)
+        result_events = self.db.get_events_by(DataSource.LOW_RADIO_FREQUENCY, DataSourceType.SENSOR, since)
         result = []
         for event in result_events:
             result.append(converter.structure(event.data, Signal))
