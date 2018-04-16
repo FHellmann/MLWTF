@@ -3,8 +3,8 @@
     Author: Fabio Hellmann <info@fabio-hellmann.de>
 """
 
-from .models import BluetoothDevice
-from .bt_rpi import BluetoothConnector, BluetoothDevice
+from .models import BLEDevice
+from .bt_rpi import BluetoothConnector
 
 
 class BluetoothController(object):
@@ -14,7 +14,7 @@ class BluetoothController(object):
     def scan(self):
         return self.btle_rpi.scan()
 
-    def connect(self, device: BluetoothDevice, callback_function):
+    def connect(self, device: BLEDevice, callback_function):
         self.btle_rpi.connect(device, callback_function)
 
     def disconnect(self):

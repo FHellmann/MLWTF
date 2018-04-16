@@ -6,7 +6,7 @@
 from flask_restplus import Namespace, Resource, reqparse
 from marshmallow import Schema, fields as ma_fields, post_load
 
-from app.core.bluetooth import bt_controller, BluetoothDevice
+from app.core.bluetooth import bt_controller, BLEDevice
 
 ns_ts = Namespace('thermostat', description='The thermostat interface')
 
@@ -19,7 +19,7 @@ class BTDeviceSchema(Schema):
 
     @post_load
     def create_bt_device(self, data):
-        return BluetoothDevice(**data)
+        return BLEDevice(**data)
 
 
 @ns_ts.route('/all')

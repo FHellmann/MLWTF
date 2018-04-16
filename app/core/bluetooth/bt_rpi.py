@@ -7,7 +7,7 @@ import codecs
 
 from bluepy import btle
 
-from .models import BluetoothDevice
+from .models import BLEDevice
 
 DEFAULT_TIMEOUT = 1
 
@@ -17,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 class BTLEConnection(btle.DefaultDelegate):
     """Representation of a BTLE Connection."""
 
-    def __init__(self, device: BluetoothDevice):
+    def __init__(self, device: BLEDevice):
         """Initialize the connection."""
         btle.DefaultDelegate.__init__(self)
 
@@ -33,18 +33,18 @@ class BTLEConnection(btle.DefaultDelegate):
         """
         self._conn = btle.Peripheral()
         self._conn.withDelegate(self)
-        _LOGGER.debug("Trying to connect to %s", self._device.mac)
+        _LOGGER.debug("Trying to connect to %s", self._device.addr)
         try:
-            self._conn.connect(self._device.mac)
+            self._conn.connect(self._device.addr)
         except btle.BTLEException as ex:
-            _LOGGER.debug("Unable to connect to the device %s, retrying: %s", self._device.mac, ex)
+            _LOGGER.debug("Unable to connect to the device %s, retrying: %s", self._device.addr, ex)
             try:
-                self._conn.connect(self._device.mac)
+                self._conn.connect(self._device.addr)
             except Exception as ex2:
-                _LOGGER.debug("Second connection try to %s failed: %s", self._device.mac, ex2)
+                _LOGGER.debug("Second connection try to %s failed: %s", self._device.addr, ex2)
                 raise
 
-        _LOGGER.debug("Connected to %s", self._device.mac)
+        _LOGGER.debug("Connected to %s", self._device.addr)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -88,18 +88,22 @@ class BluetoothConnector(object):
         self.handle = "btle_handle_my-smart-home"
 
     def scan(self):
-        devices = self.scanner.scan(passive=True)
+        devices = self.scanner.scan()
         result = []
 
         for dev in devices:
-            result.append(BluetoothDevice(dev.addr))
-            #print("Device %s (%s), RSSI=%d dB", dev.addr, dev.addrType, dev.rssi)
-            #for (adtype, desc, value) in dev.getScanData():
-            #    print("  %s = %s", desc, value)
+            name = dev.getValueText(0x09)
+            if name is None:
+                name = "Unknown"
+            result.append(BLEDevice(dev.addr, name, dev.rssi))
+            _LOGGER.debug("Device %s (%s), RSSI=%d dB", dev.addr, dev.addrType, dev.rssi)
+            for (adtype, desc, value) in dev.getScanData():
+                _LOGGER.debug("AdType=" + str(adtype) + ", Desc=" + str(desc) + ", Value=" + str(value))
+
         return result
 
-    def connect(self, device : BluetoothDevice, callback_function):
-        self.curr_conn = BTLEConnection(device.mac)
+    def connect(self, device : BLEDevice, callback_function):
+        self.curr_conn = BTLEConnection(device.addr)
         self.curr_conn.set_callback(self.handle, callback_function)
 
     def disconnect(self):

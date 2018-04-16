@@ -11,7 +11,7 @@ from datetime import datetime
 
 @unique
 class ThermostatManufacturer(Enum):
-    COMET_BLUE = "comet blue"
+    COMET_BLUE = "Comet Blue"
 
 
 @s(frozen=True)

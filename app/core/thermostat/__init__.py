@@ -5,7 +5,7 @@
 
 import logging
 from datetime import datetime
-from app.core.bluetooth import bt_controller, BluetoothDevice
+from app.core.bluetooth import bt_controller, BLEDevice
 from app.core.thermostat.models import ThermostatEntry, ThermostatManufacturer
 from app.database import db
 from app.database.models import DataSource, DataSourceType
@@ -41,7 +41,7 @@ class ThermostatController(object):
     def scan(self):
         return self.bt.scan()
 
-    def connect(self, device : BluetoothDevice):
+    def connect(self, device : BLEDevice):
         self.bt.connect(device, self._callback_function)
 
     def disconnect(self):
