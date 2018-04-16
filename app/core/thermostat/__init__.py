@@ -6,7 +6,7 @@
 import logging
 from datetime import datetime
 from app.core.bluetooth import bt_controller, BLEDevice
-from app.core.thermostat.models import ThermostatEntry, ThermostatManufacturer
+from app.core.thermostat.models import ThermostatEntry, ThermostatManufacturer, Thermostat
 from app.database import db
 from app.database.models import DataSource, DataSourceType
 from app.database.converter import converter
@@ -39,9 +39,20 @@ class ThermostatController(object):
         self.bt = bt_controller
 
     def scan(self):
-        return self.bt.scan()
+        devices = self.bt.scan()
+        result = []
+        # filter all devices which are not recognizable by the thermostat manufacturers
+        for device in devices:
+            for manufacturer in ThermostatManufacturer:
+                if device.name is manufacturer.value:
+                    result.append(Thermostat(addr=device.addr,
+                                             name=device.name,
+                                             rssi=device.rssi,
+                                             manufacturer=manufacturer
+                                             ))
+        return result
 
-    def connect(self, device : BLEDevice):
+    def connect(self, device: Thermostat):
         self.bt.connect(device, self._callback_function)
 
     def disconnect(self):

@@ -8,6 +8,8 @@ from attr.validators import instance_of
 from enum import Enum, unique
 from datetime import datetime
 
+from app.core.bluetooth.models import BLEDevice
+
 
 @unique
 class ThermostatManufacturer(Enum):
@@ -15,9 +17,13 @@ class ThermostatManufacturer(Enum):
 
 
 @s(frozen=True)
-class ThermostatEntry(object):
-    thermostat_name = ib(validator=instance_of(str), type=str)
+class Thermostat(BLEDevice):
     type = ib(validator=instance_of(ThermostatManufacturer), type=ThermostatManufacturer)
+
+
+@s(frozen=True)
+class ThermostatEntry(object):
+    thermostat = ib(validator=instance_of(Thermostat), type=Thermostat)
     timestamp = ib(validator=instance_of(datetime), type=datetime)
     current_temp = ib(validator=instance_of(float), type=float)
     manual_temp = ib(validator=instance_of(float), type=float)

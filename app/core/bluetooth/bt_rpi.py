@@ -17,12 +17,12 @@ _LOGGER = logging.getLogger(__name__)
 class BTLEConnection(btle.DefaultDelegate):
     """Representation of a BTLE Connection."""
 
-    def __init__(self, device: BLEDevice):
+    def __init__(self, addr):
         """Initialize the connection."""
         btle.DefaultDelegate.__init__(self)
 
         self._conn = None
-        self._device = device
+        self._addr = addr
         self._callbacks = {}
 
     def __enter__(self):
@@ -33,18 +33,18 @@ class BTLEConnection(btle.DefaultDelegate):
         """
         self._conn = btle.Peripheral()
         self._conn.withDelegate(self)
-        _LOGGER.debug("Trying to connect to %s", self._device.addr)
+        _LOGGER.debug("Trying to connect to %s", self._addr)
         try:
-            self._conn.connect(self._device.addr)
+            self._conn.connect(self._addr)
         except btle.BTLEException as ex:
-            _LOGGER.debug("Unable to connect to the device %s, retrying: %s", self._device.addr, ex)
+            _LOGGER.debug("Unable to connect to the device %s, retrying: %s", self._addr, ex)
             try:
-                self._conn.connect(self._device.addr)
+                self._conn.connect(self._addr)
             except Exception as ex2:
-                _LOGGER.debug("Second connection try to %s failed: %s", self._device.addr, ex2)
+                _LOGGER.debug("Second connection try to %s failed: %s", self._addr, ex2)
                 raise
 
-        _LOGGER.debug("Connected to %s", self._device.addr)
+        _LOGGER.debug("Connected to %s", self._addr)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -59,8 +59,8 @@ class BTLEConnection(btle.DefaultDelegate):
             self._callbacks[handle](data)
 
     @property
-    def device(self):
-        return self._device
+    def mac(self):
+        return self._addr
 
     def set_callback(self, handle, function):
         """Set the callback for a Notification handle. It will be called with the parameter data, which is binary."""
