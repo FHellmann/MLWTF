@@ -23,7 +23,6 @@ class Thermostat(BLEDevice):
 
 @s(frozen=True)
 class ThermostatEntry(object):
-    thermostat = ib(validator=instance_of(Thermostat), type=Thermostat)
     timestamp = ib(validator=instance_of(datetime), type=datetime)
     current_temp = ib(validator=instance_of(float), type=float)
     manual_temp = ib(validator=instance_of(float), type=float)
