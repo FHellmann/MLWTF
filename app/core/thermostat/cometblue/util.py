@@ -8,7 +8,7 @@ import datetime
 import struct
 import uuid as uuid_module
 
-from app.core.thermostat.models import StructPacking, Holiday, Status, Temperature
+from app.core.thermostat.cometblue.models import StructPacking, Holiday, Status, Temperature
 
 _LOGGER = logging.getLogger(__name__)
 

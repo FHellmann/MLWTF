@@ -39,9 +39,9 @@ class Database:
         self.table_users = self.db.table('users')
         self.table_devices = self.db.table('devices')
 
-    def add_event(self, data, event_type: DataSource, data_source_type: DataSourceType):
+    def add_event(self, data, data_source: DataSource, data_source_type: DataSourceType):
         with self.lock.writer():
-            event = Event(event_type=event_type, data_source_type=data_source_type, data=data)
+            event = Event(data_source=data_source, data_source_type=data_source_type, data=data)
             unstructure = converter.unstructure(event)
             self.table_events.insert(unstructure)
             return event
@@ -51,18 +51,18 @@ class Database:
             event = self.table_events.get(doc_id=event_id)
             return event
 
-    def get_events_by(self, event_type: DataSource, data_source_type: DataSourceType,
+    def get_events_by(self, data_source: DataSource, data_source_type: DataSourceType,
                       since: datetime = datetime.utcnow()):
         with self.lock.reader():
             search = self.table_events.search(
-                (Query().event_type == event_type.value) &
+                (Query().data_source == data_source.value) &
                 (Query().data_source_type == data_source_type.value) &
                 (Query().timestamp >= since.timestamp())
             )
             structure = converter.structure(search, List[Event])
             return structure
 
-    def get_last_event(self, event_type: DataSource, data_source_type: DataSourceType):
+    def get_last_event(self, data_source: DataSource, data_source_type: DataSourceType):
         with self.lock.reader():
             event_count = len(self.table_events)
 
@@ -71,7 +71,7 @@ class Database:
                 last_event_raw = self.table_events.get(doc_id=event_count)
                 last_event = converter.structure(last_event_raw, Event)
                 event_count -= 1
-                if (last_event.event_type == event_type and last_event.data_source_type == data_source_type) or \
+                if (last_event.data_source == data_source and last_event.data_source_type == data_source_type) or \
                     event_count < 1:
                     break
 

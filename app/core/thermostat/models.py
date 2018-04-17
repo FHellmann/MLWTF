@@ -18,7 +18,7 @@ class ThermostatManufacturer(Enum):
 
 @s(frozen=True)
 class Thermostat(BLEDevice):
-    type = ib(validator=instance_of(ThermostatManufacturer), type=ThermostatManufacturer)
+    manufacturer = ib(validator=instance_of(ThermostatManufacturer), type=ThermostatManufacturer)
 
 
 @s(frozen=True)
